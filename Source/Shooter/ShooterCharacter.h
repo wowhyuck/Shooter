@@ -25,6 +25,13 @@ protected:
 	// 좌/우 이동 함수
 	void MoveRight(float value);
 
+	// input(rate)에 따라 좌/우 회전 함수
+	// rate는 normalized
+	void TurnAtRate(float rate);
+
+	// input(rate)에 따라 위/아래 회전 함수
+	// rate는 normalized
+	void LoopUpAtRate(float rate);
 
 public:	
 	// Called every frame
@@ -41,6 +48,15 @@ private:
 	// 캐릭터 카메라
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	// 좌/우 회전율 (deg/sec)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseTurnRate;
+
+	// 위/아래 회전율 (deg/sec)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseLookUpRate;
+
 
 public:
 	// CameraBoom 반환
