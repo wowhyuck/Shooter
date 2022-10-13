@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "ShooterCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -10,11 +11,16 @@ AShooterCharacter::AShooterCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// CameraBoom »ı¼º (Ãæµ¹ ½Ã Ä³¸¯ÅÍÂÊÀ¸·Î ÀÌµ¿)
+	// CameraBoom ìƒì„± (ì¶©ëŒ ì‹œ ìºë¦­í„°ìª½ìœ¼ë¡œ ì´ë™)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.f;		// CameraBoom ±æÀÌ (Ä³¸¯ÅÍ¿Í Ä«¸Ş¶ó °£ÀÇ °Å¸®)
-	CameraBoom->bUsePawnControlRotation = true;		// ÄÁÆ®·Ñ·¯¿¡ µû¶ó CameraBoom È¸Àü
+	CameraBoom->TargetArmLength = 300.f;		// CameraBoom ê¸¸ì´ (ìºë¦­í„°ì™€ ì¹´ë©”ë¼ ê°„ì˜ ê±°ë¦¬)
+	CameraBoom->bUsePawnControlRotation = true;		// ì»¨íŠ¸ë¡¤ëŸ¬ì— ë”°ë¼ CameraBoom íšŒì „
+
+	// ì¹´ë©”ë¼ ìƒì„±
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);		// ì¹´ë©”ë¼ë¥¼ CameraBoom ëì— ë¶™ì´ê¸°
+	FollowCamera->bUsePawnControlRotation = false;		// CameraBoomì— ë”°ë¼ ì¹´ë©”ë¼ íšŒì „í•˜ì§€ ì•Šê¸°
 }
 
 // Called when the game starts or when spawned
