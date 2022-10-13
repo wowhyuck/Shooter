@@ -19,6 +19,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// 앞/뒤 이동 함수
+	void MoveForward(float value);
+
+	// 좌/우 이동 함수
+	void MoveRight(float value);
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
