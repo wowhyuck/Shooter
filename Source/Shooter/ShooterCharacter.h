@@ -33,6 +33,9 @@ protected:
 	// rate는 normalized
 	void LoopUpAtRate(float rate);
 
+	// FireButton이 눌렸을 때 호출
+	void FireWeapon();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -57,6 +60,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseLookUpRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class USoundCue* FireSound;
 
 public:
 	// CameraBoom 반환
