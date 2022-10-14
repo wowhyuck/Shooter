@@ -68,6 +68,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	class UParticleSystem* MuzzleFlash;
 
+	// 무기 사용 몽타주
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class UAnimMontage* HipFireMontage;
+
 public:
 	// CameraBoom 반환
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
