@@ -15,7 +15,7 @@
 AShooterCharacter::AShooterCharacter() :
 	BaseTurnRate(45.f), BaseLookUpRate(45.f)
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// CameraBoom 생성 (충돌 시 캐릭터쪽으로 이동)
@@ -46,7 +46,7 @@ AShooterCharacter::AShooterCharacter() :
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void AShooterCharacter::MoveForward(float value)
@@ -104,36 +104,98 @@ void AShooterCharacter::FireWeapon()
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
 		}
 
-		FHitResult FireHit;
-		const FVector Start{ SocketTransform.GetLocation() };
-		const FQuat Rotation{ SocketTransform.GetRotation() };
-		const FVector RotationAxis{ Rotation.GetAxisX() };
-		const FVector End{ Start + RotationAxis * 50'000.f };
-
-		FVector BeamEndPoint{ End };
-
-		GetWorld()->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
-		if (FireHit.bBlockingHit)
+		// Viewport 크기 얻기
+		FVector2D ViewportSize;
+		if (GEngine && GEngine->GameViewport)
 		{
-			//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
-			//DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f);
+			GEngine->GameViewport->GetViewportSize(ViewportSize);
+		}
 
-			BeamEndPoint = FireHit.Location;
+		// 조준점의 screen space에서 위치 얻기
+		FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+		CrosshairLocation.Y -= 50.f;
+		FVector CrosshairWorldPosition;
+		FVector CrosshairWorldDirection;
 
-			if (ImpactParticles)
+		// 조준점의 world에서 위치, 방향 얻기
+		bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(
+			UGameplayStatics::GetPlayerController(this, 0),
+			CrosshairLocation,
+			CrosshairWorldPosition,
+			CrosshairWorldDirection);
+
+		if (bScreenToWorld)		// deprojection 성공 여부
+		{
+			FHitResult ScreenTraceHit;
+			const FVector Start{ CrosshairWorldPosition };
+			const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * 50'000.f };
+
+			// BeamEndPoint에 End값을 넣기
+			FVector BeamEndPoint{ End };
+
+			// world에 있는 조준점으로부터 trace하기
+			GetWorld()->LineTraceSingleByChannel(
+				ScreenTraceHit,
+				Start,
+				End,
+				ECollisionChannel::ECC_Visibility);
+
+			if (ScreenTraceHit.bBlockingHit)		// trace가 충돌 발생 여부
 			{
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, FireHit.Location);
+				// BeamEndPoint에 충돌 위치를 넣기
+				BeamEndPoint = ScreenTraceHit.Location;
+				if (ImpactParticles)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(
+						GetWorld(),
+						ImpactParticles,
+						ScreenTraceHit.Location);
+				}
+			}
+
+			if (BeamParticles)
+			{
+				UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
+					GetWorld(), 
+					BeamParticles, 
+					SocketTransform);
+				if (Beam)
+				{
+					Beam->SetVectorParameter(FName("Target"), BeamEndPoint);
+				}
 			}
 		}
 
-		if (BeamParticles)
-		{
-			UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
-			if (Beam)
-			{
-				Beam->SetVectorParameter(FName("Target"), BeamEndPoint);
-			}
-		}
+		//FHitResult FireHit;
+		//const FVector Start{ SocketTransform.GetLocation() };
+		//const FQuat Rotation{ SocketTransform.GetRotation() };
+		//const FVector RotationAxis{ Rotation.GetAxisX() };
+		//const FVector End{ Start + RotationAxis * 50'000.f };
+
+		//FVector BeamEndPoint{ End };
+
+		//GetWorld()->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
+		//if (FireHit.bBlockingHit)
+		//{
+		//	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
+		//	//DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f);
+
+		//	BeamEndPoint = FireHit.Location;
+
+		//	if (ImpactParticles)
+		//	{
+		//		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, FireHit.Location);
+		//	}
+		//}
+
+		//if (BeamParticles)
+		//{
+		//	UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
+		//	if (Beam)
+		//	{
+		//		Beam->SetVectorParameter(FName("Target"), BeamEndPoint);
+		//	}
+		//}
 	}
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
