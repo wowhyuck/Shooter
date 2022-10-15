@@ -72,6 +72,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* HipFireMontage;
 
+	// 불빛
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class UParticleSystem* ImpactParticles;
+
+	// 연기
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class UParticleSystem* BeamParticles;
+
 public:
 	// CameraBoom 반환
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
