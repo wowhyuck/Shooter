@@ -144,13 +144,30 @@ void AShooterCharacter::FireWeapon()
 			{
 				// BeamEndPoint에 충돌 위치를 넣기
 				BeamEndPoint = ScreenTraceHit.Location;
-				if (ImpactParticles)
-				{
-					UGameplayStatics::SpawnEmitterAtLocation(
-						GetWorld(),
-						ImpactParticles,
-						ScreenTraceHit.Location);
-				}
+			}
+
+			// 총구로부터 trace
+			FHitResult WeaponTraceHit;
+			const FVector WeaponTraceStart{ SocketTransform.GetLocation() };
+			const FVector WeaponTraceEnd{ BeamEndPoint };
+			GetWorld()->LineTraceSingleByChannel(
+				WeaponTraceHit,
+				WeaponTraceStart,
+				WeaponTraceEnd,
+				ECollisionChannel::ECC_Visibility);
+
+			if (WeaponTraceHit.bBlockingHit)		// 총알과 BeamEndPoint 사이에 object가 있나?
+			{
+				BeamEndPoint = WeaponTraceHit.Location;
+			}
+
+			// BeamEndPoint 업데이트 후, impact particles 불러오기
+			if (ImpactParticles)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(
+					GetWorld(),
+					ImpactParticles,
+					BeamEndPoint);
 			}
 
 			if (BeamParticles)
