@@ -36,6 +36,9 @@ protected:
 	// FireButton이 눌렸을 때 호출
 	void FireWeapon();
 
+	
+	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
