@@ -23,6 +23,7 @@ AShooterCharacter::AShooterCharacter() :
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 300.f;		// CameraBoom 길이 (캐릭터와 카메라 간의 거리)
 	CameraBoom->bUsePawnControlRotation = true;		// 컨트롤러에 따라 CameraBoom 회전
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
 
 	// 카메라 생성
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -31,11 +32,11 @@ AShooterCharacter::AShooterCharacter() :
 
 	// 컨트롤러에 따라 캐릭터 회전하지 않기, 컨트롤러는 카메라한테만 영향 받기
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// 캐릭터 이동 구성하기
-	GetCharacterMovement()->bOrientRotationToMovement = true;		// input의 방향으로 이동
+	GetCharacterMovement()->bOrientRotationToMovement = false;		// input의 방향으로 이동
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);		// 회전율
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
