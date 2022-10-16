@@ -33,6 +33,15 @@ protected:
 	// rate는 normalized
 	void LoopUpAtRate(float rate);
 
+	// 마우스 X 이동 값에 따라 컨트롤러 회전하기
+	// value는 마우스 이동값
+	void Turn(float value);
+
+	// 마우스 Y 이동 값에 따라 컨트롤러 회전하기
+	// value는 마우스 이동값
+	void LookUp(float value);
+
+
 	// FireButton이 눌렸을 때 호출
 	void FireWeapon();
 
@@ -43,6 +52,9 @@ protected:
 	void AimingButtonReleased();
 
 	void CameraInterpZoom(float DeltaTime);
+
+	// 조준 여부에 따라 회전율 세팅
+	void SetLookRates();
 
 public:	
 	// Called every frame
@@ -60,13 +72,41 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	// 좌/우 회전율 (deg/sec)
+	// 기본 좌/우 회전율 (deg/sec)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseTurnRate;
 
-	// 위/아래 회전율 (deg/sec)
+	// 기본 위/아래 회전율 (deg/sec)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseLookUpRate;
+
+	// 조준 안 할 때 좌/우 회전율 (deg/sec)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float HipTurnRate;
+
+	// 조준 안 할 때 위/아래 회전율 (deg/sec)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float HipLookUpRate;
+
+	// 조준(zoom-in)할 때 좌/우 회전율 (deg/sec)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float AimingTurnRate;
+
+	// 조준(zoom-in)할 때 위/아래 회전율 (deg/sec)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float AimingLookUpRate;
+
+	// 조준 안 할 때 마우스 감도에 따른 scale factor
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
+	float MouseHipTurnRate;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
+	float MouseHipLookUpRate;
+
+	// 조준 할 때 마우스 감도에 따른 scale factor
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
+	float MouseAimingTurnRate;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
+	float MouseAimingLookUpRate;
 
 	// 총소리 (랜덤)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
