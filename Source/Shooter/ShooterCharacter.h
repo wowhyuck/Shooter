@@ -36,8 +36,13 @@ protected:
 	// FireButton이 눌렸을 때 호출
 	void FireWeapon();
 
-	
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
+	// 줌인 버튼에 따라 (bAiming이 true 또는 false) 함수 호출
+	void AimingButtonPressed();
+	void AimingButtonReleased();
+
+	void CameraInterpZoom(float DeltaTime);
 
 public:	
 	// Called every frame
@@ -82,6 +87,23 @@ private:
 	// 연기
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	class UParticleSystem* BeamParticles;
+
+	// 줌인 여부
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	bool bAiming;
+
+	// 카메라 기본 field of value(시야) 값
+	float CameraDefaultFOV;
+
+	// 카메라 줌인 field of value 값
+	float CameraZoomedFOV;
+
+	// 현재 프레임 카메라 field of value 값
+	float CameraCurrentFOV;
+
+	// 줌인 속도
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float ZoomInterpSpeed;
 
 public:
 	// CameraBoom 반환

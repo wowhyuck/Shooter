@@ -13,7 +13,13 @@
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
-	BaseTurnRate(45.f), BaseLookUpRate(45.f)
+	BaseTurnRate(45.f), 
+	BaseLookUpRate(45.f), 
+	bAiming(false), 
+	CameraDefaultFOV(0.f),		// BeginPlay에서 세팅
+	CameraZoomedFOV(35.f),
+	CameraCurrentFOV(0.f),
+	ZoomInterpSpeed(20.f)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,9 +27,9 @@ AShooterCharacter::AShooterCharacter() :
 	// CameraBoom 생성 (충돌 시 캐릭터쪽으로 이동)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.f;		// CameraBoom 길이 (캐릭터와 카메라 간의 거리)
+	CameraBoom->TargetArmLength = 180.f;		// CameraBoom 길이 (캐릭터와 카메라 간의 거리)
 	CameraBoom->bUsePawnControlRotation = true;		// 컨트롤러에 따라 CameraBoom 회전
-	CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 70.f);
 
 	// 카메라 생성
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -46,6 +52,12 @@ AShooterCharacter::AShooterCharacter() :
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (FollowCamera)
+	{
+		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
+		CameraCurrentFOV = CameraDefaultFOV;
+	}
 
 }
 
@@ -204,11 +216,47 @@ bool AShooterCharacter::GetBeamEndLocation(
 	return false;
 }
 
+void AShooterCharacter::AimingButtonPressed()
+{
+	bAiming = true;
+}
+
+void AShooterCharacter::AimingButtonReleased()
+{
+	bAiming = false;
+}
+
+void AShooterCharacter::CameraInterpZoom(float DeltaTime)
+{
+	// 현재 카메라 FOV 세팅하기
+	if (bAiming)
+	{
+		// Interpolation to zoomed FOV
+		CameraCurrentFOV = FMath::FInterpTo(
+			CameraCurrentFOV,
+			CameraZoomedFOV,
+			DeltaTime,
+			ZoomInterpSpeed);
+	}
+	else
+	{
+		// Interpolation to default FOV
+		CameraCurrentFOV = FMath::FInterpTo(
+			CameraCurrentFOV,
+			CameraDefaultFOV,
+			DeltaTime,
+			ZoomInterpSpeed);
+	}
+	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
+}
+
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// 줌인, 줌아웃할 때 두 FOV를 interpolation해서 부드럽게 하기
+	CameraInterpZoom(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -227,6 +275,11 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &AShooterCharacter::FireWeapon);
+
+	PlayerInputComponent->BindAction("AimingButton", IE_Pressed, this, 
+		&AShooterCharacter::AimingButtonPressed);
+	PlayerInputComponent->BindAction("AimingButton", IE_Released, this, 
+		&AShooterCharacter::AimingButtonReleased);
 
 
 }
