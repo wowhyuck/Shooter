@@ -39,6 +39,9 @@ private:
 	// strafe에 사용될 offset yaw
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float MovementOffsetYaw;
-
+	
+	// 멈추기 전 프레임의 offset yaw 값 저장
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float LastMovementOffsetYaw;
 
 };
