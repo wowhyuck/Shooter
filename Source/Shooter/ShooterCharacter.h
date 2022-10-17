@@ -64,6 +64,14 @@ protected:
 	UFUNCTION()
 	void FinishCrosshairBulletFire();
 
+	void FireButtonPressed();
+	void FireButtonReleased();
+
+	void StartFireTimer();
+
+	UFUNCTION()
+	void AutoFireReset();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -177,6 +185,18 @@ private:
 	float ShootTimeDuration;
 	bool bFiringBullet;
 	FTimerHandle CrosshairShootTimer;
+
+	// 마우스 왼쪽 버튼 눌렸는지 여부
+	bool bFireButtonPressed;
+
+	// 발사할 수 있을 때 true, 타이머동안 기다릴 때 false
+	bool bShouldFire;
+
+	// 연사 수치
+	float AutomaticFireRate;
+
+	// 발사 간의 타이머 세팅
+	FTimerHandle AutoFireTimer;
 
 public:
 	// CameraBoom 반환
