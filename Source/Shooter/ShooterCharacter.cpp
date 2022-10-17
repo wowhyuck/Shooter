@@ -35,7 +35,14 @@ AShooterCharacter::AShooterCharacter() :
 	CameraDefaultFOV(0.f),		// BeginPlay에서 세팅
 	CameraZoomedFOV(35.f),
 	CameraCurrentFOV(0.f),
-	ZoomInterpSpeed(20.f)
+	ZoomInterpSpeed(20.f),
+
+	// Crosshair Spread Factors
+	CrosshairSpreadMultiplier(0.f),
+	CrosshairVelocityFactor(0.f),
+	CrosshairInAirFactor(0.f),
+	CrosshairAimFactor(0.f),
+	CrosshairShootingFactor(0.f)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -315,12 +322,56 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 	FVector Velocity{ GetVelocity() };
 	Velocity.Z = 0;
 
+	// 캐릭터가 이동할 때 Crosshair factor 계산하기 
 	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(
 		WalkSpeedRange,
 		VelocityMultiplierRange,
 		Velocity.Size());
 
-	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+	// 캐릭터가 공중에 있을 때 Crosshair 계산하기
+	if (GetCharacterMovement()->IsFalling())		// 공중에 있는지 여부
+	{
+		// 공중에 있을 때 천천히 Crosshair가 퍼지기
+		CrosshairInAirFactor = FMath::FInterpTo(
+			CrosshairInAirFactor, 
+			2.25f, 
+			DeltaTime, 
+			2.25f);
+	}
+	else
+	{
+		// 캐릭터가 땅에 있을 때 Crosshair가 빠르게 모이기
+		CrosshairInAirFactor = FMath::FInterpTo(
+			CrosshairInAirFactor,
+			0.f,
+			DeltaTime,
+			30.f);
+	}
+
+	// 캐릭터가 조준했을 때 Crosshair 계산하기
+	if (bAiming)
+	{
+		// 캐릭터가 조준했을 때 Crosshair가 빠르게 모이기
+		CrosshairAimFactor = FMath::FInterpTo(
+			CrosshairAimFactor,
+			0.6f,
+			DeltaTime,
+			30.f);
+	}
+	else
+	{
+		// 캐릭터가 조준 안 했을 때 Crosshair가 빠르게 원래대로 돌아가기
+		CrosshairAimFactor = FMath::FInterpTo(
+			CrosshairAimFactor,
+			0.f,
+			DeltaTime,
+			30.f);
+	}
+
+	CrosshairSpreadMultiplier = 0.5f + 
+		CrosshairVelocityFactor + 
+		CrosshairInAirFactor - 
+		CrosshairAimFactor;
 }
 
 // Called every frame
