@@ -72,6 +72,12 @@ protected:
 	UFUNCTION()
 	void AutoFireReset();
 
+	// Crosshair에 포착된 아이템 (Line Trace)
+	bool TraceUnderCrosshairs(FHitResult& OutHitResult, FVector& OutHitLocation);
+
+	// OverlappedItemCount > 0 일 때, 아이템 trace하기
+	void TraceForItems();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -198,6 +204,12 @@ private:
 	// 발사 간의 타이머 세팅
 	FTimerHandle AutoFireTimer;
 
+	// 매 프레임마다 아이템을 trace해야한다면 true
+	bool bShouldTraceForItems;
+
+	// 오버랩된 아이템 수
+	int8 OverlappedItemCount;
+
 public:
 	// CameraBoom 반환
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -210,4 +222,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetCrosshairSpreadMultiplier() const;
+
+	FORCEINLINE int8 GetOverlappedItemCount() const{ return OverlappedItemCount; }
+
+	// OverlappedItemCount 더하기/빼기, bShouldTraceForItems 업데이트하기
+	void IncrementOverlappedItemCount(int8 Amount);
 };
