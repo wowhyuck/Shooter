@@ -488,7 +488,27 @@ void AShooterCharacter::TraceForItems()
 				// 아이템의 Pickup Widget 보여주기
 				HitItem->GetPickupWidget()->SetVisibility(true);
 			}
+
+			// 최근 프레임에 캐릭터가 아이템과 부딪힐 때
+			if (TraceHitItemLastFrame)
+			{
+				if (HitItem != TraceHitItemLastFrame)
+				{
+					// 캐릭터가 부딪힌 현재 아이템과 최근 프레임의 아이템과 다를 때
+					// 또는 AItem이 Null일 때
+					TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+				}
+			}
+
+			// 다음 프레임을 위해 HitItem 정보를 저장
+			TraceHitItemLastFrame = HitItem;
 		}
+	}
+	else if(TraceHitItemLastFrame)
+	{
+		// 어떤 아이템들과 겹쳐있지 않을 때
+		// 최근 아이템이 widget을 보여주지 않을 때
+		TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
 	}
 }
 

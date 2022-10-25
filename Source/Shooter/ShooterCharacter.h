@@ -210,6 +210,10 @@ private:
 	// 오버랩된 아이템 수
 	int8 OverlappedItemCount;
 
+	// 최근 프레임에 부딪힌 AItem 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+	class AItem* TraceHitItemLastFrame;
+
 public:
 	// CameraBoom 반환
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
