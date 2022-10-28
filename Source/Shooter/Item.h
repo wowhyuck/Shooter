@@ -6,6 +6,20 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
+
+UENUM(BlueprintType)
+enum class EItemRarity : uint8
+{
+	EIR_Damaged UMETA(DisplayName = "Damaged"),
+	EIR_Common UMETA(DisplayName = "Common"),
+	EIR_Uncommon UMETA(DisplayName = "Uncommon"),
+	EIR_Rare UMETA(DisplayName = "Rare"),
+	EIR_Legendary UMETA(DisplayName = "Legendary"),
+
+	EIR_MAX UMETA(DisplayName = "DefaultMAX")
+};
+
+
 UCLASS()
 class SHOOTER_API AItem : public AActor
 {
@@ -37,6 +51,9 @@ protected:
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
 
+	// 아이템 등급 정보가 담긴 ActiveStars의 bool array를 세팅
+	void SetActiveStars();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -65,6 +82,14 @@ private:
 	// 아이템 count (총알 개수 등등)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	int32 ItemCount;
+
+	// 아이템 등급 - Pickup widget에 있는 별의 수에 따라 결정
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	EItemRarity ItemRarity;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	TArray<bool> ActiveStars;
 
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
