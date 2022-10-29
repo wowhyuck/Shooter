@@ -12,6 +12,7 @@
 #include "particles/ParticleSystemComponent.h"
 #include "Item.h"
 #include "Components/WidgetComponent.h"
+#include "Weapon.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
@@ -95,6 +96,8 @@ void AShooterCharacter::BeginPlay()
 		CameraCurrentFOV = CameraDefaultFOV;
 	}
 
+	// 기본 무기를 불러오기 & 무기를 캐릭터 메시에 붙이기
+	SpawnDefaultWeapon();
 }
 
 void AShooterCharacter::MoveForward(float value)
@@ -509,6 +512,28 @@ void AShooterCharacter::TraceForItems()
 		// 어떤 아이템들과 겹쳐있지 않을 때
 		// 최근 아이템이 widget을 보여주지 않을 때
 		TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+	}
+}
+
+void AShooterCharacter::SpawnDefaultWeapon()
+{
+	// TSubclassOf 변수 체크
+	if (DefaultWeaponClass)
+	{
+		// 무기 생성하기
+		AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
+		
+		// HandSocket 얻기 
+		const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(
+			FName("RightHandSocket"));
+		if (HandSocket)
+		{
+			// 무기를 HandSocket에 붙이기
+			HandSocket->AttachActor(DefaultWeapon, GetMesh());
+		}
+
+		// 새로 나온 무기를 장착 무기로 세팅하기
+		EquippedWeapon = DefaultWeapon;
 	}
 }
 

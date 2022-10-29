@@ -78,6 +78,9 @@ protected:
 	// OverlappedItemCount > 0 일 때, 아이템 trace하기
 	void TraceForItems();
 
+	
+	void SpawnDefaultWeapon();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -213,6 +216,14 @@ private:
 	// 최근 프레임에 부딪힌 AItem 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
 	class AItem* TraceHitItemLastFrame;
+
+	// 현재 장착중인 무기
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class AWeapon* EquippedWeapon;
+
+	// default weapon class를 블루프린트에서 세팅하기
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeapon> DefaultWeaponClass;
 
 public:
 	// CameraBoom 반환
