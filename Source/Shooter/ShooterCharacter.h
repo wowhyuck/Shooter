@@ -78,8 +78,11 @@ protected:
 	// OverlappedItemCount > 0 일 때, 아이템 trace하기
 	void TraceForItems();
 
-	
-	void SpawnDefaultWeapon();
+	// 기본 무기 생성 및 장착하기
+	class AWeapon* SpawnDefaultWeapon();
+
+	// 무기 장착 및 캐릭터 메시에 붙이기
+	void EquipWeapon(AWeapon* WeaponToEquip);
 
 public:	
 	// Called every frame
@@ -219,7 +222,7 @@ private:
 
 	// 현재 장착중인 무기
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	class AWeapon* EquippedWeapon;
+	AWeapon* EquippedWeapon;
 
 	// default weapon class를 블루프린트에서 세팅하기
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))

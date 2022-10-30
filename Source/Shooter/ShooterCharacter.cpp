@@ -13,6 +13,9 @@
 #include "Item.h"
 #include "Components/WidgetComponent.h"
 #include "Weapon.h"
+#include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
+
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
@@ -96,8 +99,8 @@ void AShooterCharacter::BeginPlay()
 		CameraCurrentFOV = CameraDefaultFOV;
 	}
 
-	// 기본 무기를 불러오기 & 무기를 캐릭터 메시에 붙이기
-	SpawnDefaultWeapon();
+	// 기본 무기를 불러오기 & 무기 장착하기
+	EquipWeapon(SpawnDefaultWeapon());
 }
 
 void AShooterCharacter::MoveForward(float value)
@@ -515,25 +518,39 @@ void AShooterCharacter::TraceForItems()
 	}
 }
 
-void AShooterCharacter::SpawnDefaultWeapon()
+AWeapon* AShooterCharacter::SpawnDefaultWeapon()
 {
 	// TSubclassOf 변수 체크
 	if (DefaultWeaponClass)
 	{
 		// 무기 생성하기
-		AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
-		
+		return GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
+	}
+
+	return nullptr;
+}
+
+void AShooterCharacter::EquipWeapon(AWeapon* WeaponToEquip)
+{
+	// AreaSphere가 모든 충돌 무시로 세팅하기
+	WeaponToEquip->GetAreaSphere()->SetCollisionResponseToAllChannels(
+		ECollisionResponse::ECR_Ignore);
+	// CollisionBox가 모든 충돌 무시로 세팅하기
+	WeaponToEquip->GetCollisionBox()->SetCollisionResponseToAllChannels(
+		ECollisionResponse::ECR_Ignore);
+
+	if (WeaponToEquip)
+	{
 		// HandSocket 얻기 
 		const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(
 			FName("RightHandSocket"));
 		if (HandSocket)
 		{
 			// 무기를 HandSocket에 붙이기
-			HandSocket->AttachActor(DefaultWeapon, GetMesh());
+			HandSocket->AttachActor(WeaponToEquip, GetMesh());
 		}
-
 		// 새로 나온 무기를 장착 무기로 세팅하기
-		EquippedWeapon = DefaultWeapon;
+		EquippedWeapon = WeaponToEquip;
 	}
 }
 
