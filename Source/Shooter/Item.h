@@ -65,6 +65,9 @@ protected:
 	// 아이템 등급 정보가 담긴 ActiveStars의 bool array를 세팅
 	void SetActiveStars();
 
+	// 아이템 상태에 따라 특성 세팅하기
+	void SetItemProperties(EItemState State);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -110,5 +113,5 @@ public:
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
 	FORCEINLINE UBoxComponent* GetCollisionBox() const { return CollisionBox; }
 	FORCEINLINE EItemState GetItemState() const { return ItemState; }
-	FORCEINLINE void SetItemState(EItemState State) { ItemState = State; }
+	void SetItemState(EItemState State);
 };

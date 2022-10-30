@@ -532,13 +532,6 @@ AWeapon* AShooterCharacter::SpawnDefaultWeapon()
 
 void AShooterCharacter::EquipWeapon(AWeapon* WeaponToEquip)
 {
-	// AreaSphere가 모든 충돌 무시로 세팅하기
-	WeaponToEquip->GetAreaSphere()->SetCollisionResponseToAllChannels(
-		ECollisionResponse::ECR_Ignore);
-	// CollisionBox가 모든 충돌 무시로 세팅하기
-	WeaponToEquip->GetCollisionBox()->SetCollisionResponseToAllChannels(
-		ECollisionResponse::ECR_Ignore);
-
 	if (WeaponToEquip)
 	{
 		// HandSocket 얻기 
