@@ -551,6 +551,7 @@ void AShooterCharacter::EquipWeapon(AWeapon* WeaponToEquip)
 		}
 		// 새로 나온 무기를 장착 무기로 세팅하기
 		EquippedWeapon = WeaponToEquip;
+		EquippedWeapon->SetItemState(EItemState::EIS_Equipped);
 	}
 }
 
