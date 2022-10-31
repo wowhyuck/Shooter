@@ -84,6 +84,12 @@ protected:
 	// 무기 장착 및 캐릭터 메시에 붙이기
 	void EquipWeapon(AWeapon* WeaponToEquip);
 
+	// 무기를 떨어트려 놓기
+	void DropWeapon();
+
+	void SelectButtonPressed();
+	void SelectButtonReleased();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
