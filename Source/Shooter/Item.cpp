@@ -117,9 +117,10 @@ void AItem::SetItemProperties(EItemState State)
 	switch (State)
 	{
 	case EItemState::EIS_Pickup:
-		// 메시 특성 세팅하기
+		// mesh 특성 세팅하기
 		ItemMesh->SetSimulatePhysics(false);
 		ItemMesh->SetVisibility(true);
+		ItemMesh->SetEnableGravity(false);
 		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -139,6 +140,7 @@ void AItem::SetItemProperties(EItemState State)
 		// 메시 특성 세팅하기
 		ItemMesh->SetSimulatePhysics(false);
 		ItemMesh->SetVisibility(true);
+		ItemMesh->SetEnableGravity(false);
 		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -151,6 +153,26 @@ void AItem::SetItemProperties(EItemState State)
 		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
 
+	case EItemState::EIS_Falling:
+		// mesh 특성 세팅하기
+		ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		ItemMesh->SetSimulatePhysics(true);
+		ItemMesh->SetEnableGravity(true);
+		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		ItemMesh->SetCollisionResponseToChannel(
+			ECollisionChannel::ECC_WorldStatic,
+			ECollisionResponse::ECR_Block);
+
+		// AreaSphere 특성 세팅하기
+		AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		// CollisionBox 특성 세팅하기
+		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+
+		break;
 	}
 
 }
