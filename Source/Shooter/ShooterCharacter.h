@@ -90,6 +90,9 @@ protected:
 	void SelectButtonPressed();
 	void SelectButtonReleased();
 
+	// 장착된 무기를 버리고 현재 조준된 아이템을 장착하기
+	void SwapWeapon(AWeapon* WeaponToSwap);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -233,6 +236,10 @@ private:
 	// default weapon class를 블루프린트에서 세팅하기
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> DefaultWeaponClass;
+
+	// TraceForItems에 있는 플레이어가 조준한 현재 아이템 (null이 될 수 있음)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	AItem* TraceHitItem;
 
 public:
 	// CameraBoom 반환
