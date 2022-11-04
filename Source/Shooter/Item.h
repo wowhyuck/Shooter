@@ -68,6 +68,9 @@ protected:
 	// 아이템 상태에 따라 특성 세팅하기
 	void SetItemProperties(EItemState State);
 
+	// ItemInterpTime가 끝났을 때 불러오기
+	void FinishInterping();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -108,6 +111,33 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	EItemState ItemState;
 
+	// interpolation할 때 아이템의 z 위치에 사용할 커브 에셋
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	class UCurveFloat* ItemZCurve;
+
+	// interpolation 시작할 때 시작점
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	FVector ItemInterpStartLocation;
+
+	// 카메라 앞에 target interpolation 위치
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	FVector CameraTargetLocation;
+
+	// interpolation할 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	bool bInterping;
+
+	// interpolation할 때 작동
+	FTimerHandle ItemInterpTimer;
+
+	// 커브와 타이머의 지속 시간
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	float ZCurveTime;
+
+	// 캐릭터 포인터
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	class AShooterCharacter* Character;
+
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
@@ -115,4 +145,7 @@ public:
 	FORCEINLINE EItemState GetItemState() const { return ItemState; }
 	void SetItemState(EItemState State);
 	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; }
+
+	// ACharacter로부터 불러오기
+	void StartItemCurve(AShooterCharacter* Char);
 };
