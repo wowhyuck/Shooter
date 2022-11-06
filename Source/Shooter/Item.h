@@ -145,6 +145,9 @@ private:
 	float ItemInterpX;
 	float ItemInterpY;
 
+	// 카메라와 interpolation하는 아이템 사이의 초기 Yaw offset
+	float InterpInitialYawOffset;
+
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
