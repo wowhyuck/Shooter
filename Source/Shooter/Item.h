@@ -148,6 +148,10 @@ private:
 	// 카메라와 interpolation하는 아이템 사이의 초기 Yaw offset
 	float InterpInitialYawOffset;
 
+	// Interpolation할 때 아이템 크기에 사용할 Curve
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	UCurveFloat* ItemScaleCurve;
+
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }

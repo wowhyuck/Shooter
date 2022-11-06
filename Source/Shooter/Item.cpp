@@ -212,6 +212,8 @@ void AItem::FinishInterping()
 	{
 		Character->GetPickupItem(this);
 	}
+	// 크기를 원래대로 돌리기
+	SetActorScale3D(FVector(1.f));
 }
 
 void AItem::ItemInterp(float DeltaTime)
@@ -261,6 +263,12 @@ void AItem::ItemInterp(float DeltaTime)
 		// 카메라 회전값에 초기 Yaw offset 값 더하기
 		FRotator ItemRotator{ 0.f, CameraRotation.Yaw + InterpInitialYawOffset, 0.f };
 		SetActorRotation(ItemRotator, ETeleportType::TeleportPhysics);
+
+		if (ItemScaleCurve)
+		{
+			const float ScaleCurveValue = ItemScaleCurve->GetFloatValue(ElapsedTime);
+			SetActorScale3D(FVector(ScaleCurveValue, ScaleCurveValue, ScaleCurveValue));
+		}
 	}
 }
 
