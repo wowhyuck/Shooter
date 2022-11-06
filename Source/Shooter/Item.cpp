@@ -203,10 +203,39 @@ void AItem::SetItemProperties(EItemState State)
 
 void AItem::FinishInterping()
 {
+	bInterping = false;
 	if (Character)
 	{
 		Character->GetPickupItem(this);
 	}
+}
+
+void AItem::ItemInterp(float DeltaTime)
+{
+	if (!bInterping) return;
+
+	if (Character && ItemZCurve)
+	{
+		// itemInterpTimer 시작부터 경과된 시간
+		const float ElapsedTime = GetWorldTimerManager().GetTimerElapsed(ItemInterpTimer);
+		// 경과된 시간에 따른 Z-Curve의 값 얻기
+		const float CurveValue = ItemZCurve->GetFloatValue(ElapsedTime);
+		// Curve가 시작될 때 아이템의 초기 위치 얻기
+		FVector ItemLocation = ItemInterpStartLocation;
+		// 카메라 앞에 위치 얻기
+		const FVector CameraInterpLocation{ Character->GetCameraInterpLocation() };
+		
+		// ItemLocation -> CameraInterpLocation 벡터 얻기, X, Y의 값은 0으로 설정
+		const FVector ItemToCamera{ FVector(0.f, 0.f, (CameraInterpLocation - ItemLocation).Z) };
+		// CurveValue와 곱하기 위해 스칼라값으로 변환
+		const float DeltaZ = ItemToCamera.Size();
+
+		// CurveValue * DeltaZ의 값을 초기 아이템 위치의 Z값에 더하기
+		ItemLocation.Z += CurveValue * DeltaZ;
+		SetActorLocation(ItemLocation, true, nullptr, ETeleportType::TeleportPhysics);
+	}
+
+
 }
 
 // Called every frame
@@ -214,6 +243,8 @@ void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// EquipInterping State일 때 아이템 interpolation 다루기
+	ItemInterp(DeltaTime);
 }
 
 void AItem::SetItemState(EItemState State)

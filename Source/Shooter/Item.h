@@ -71,6 +71,9 @@ protected:
 	// ItemInterpTime가 끝났을 때 불러오기
 	void FinishInterping();
 
+	// EquipInterping State일 때 아이템 interpolation 다루기
+	void ItemInterp(float DeltaTime);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
