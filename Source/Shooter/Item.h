@@ -141,6 +141,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class AShooterCharacter* Character;
 
+	// EquipInterping State에서 interpolation을 할 때 아이템의 X와 Y
+	float ItemInterpX;
+	float ItemInterpY;
+
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }

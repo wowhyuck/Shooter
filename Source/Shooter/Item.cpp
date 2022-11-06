@@ -18,7 +18,9 @@ AItem::AItem() :
 	ZCurveTime(0.7f),
 	ItemInterpStartLocation(FVector(0.f)),
 	CameraTargetLocation(FVector(0.f)),
-	bInterping(false)
+	bInterping(false),
+	ItemInterpX(0.f),
+	ItemInterpY(0.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -230,12 +232,28 @@ void AItem::ItemInterp(float DeltaTime)
 		// CurveValue와 곱하기 위해 스칼라값으로 변환
 		const float DeltaZ = ItemToCamera.Size();
 
+		const FVector CurrentLocation{ GetActorLocation() };
+		// Interpolation한 X
+		const float InterpXValue = FMath::FInterpTo(
+			CurrentLocation.X,
+			CameraInterpLocation.X,
+			DeltaTime,
+			30.0f);
+		// Interpolation한 Y
+		const float InterpYValue = FMath::FInterpTo(
+			CurrentLocation.Y,
+			CameraInterpLocation.Y,
+			DeltaTime,
+			30.0f);
+
+		// Interpolation한 X와 Y 값을 ItemLocation X와 Y에 세팅하기
+		ItemLocation.X = InterpXValue;
+		ItemLocation.Y = InterpYValue;
+
 		// CurveValue * DeltaZ의 값을 초기 아이템 위치의 Z값에 더하기
 		ItemLocation.Z += CurveValue * DeltaZ;
 		SetActorLocation(ItemLocation, true, nullptr, ETeleportType::TeleportPhysics);
 	}
-
-
 }
 
 // Called every frame
