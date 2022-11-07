@@ -506,5 +506,6 @@ FodyWeavers.xsd
 
 # List of files ignored
 Content/ParagonLtBelica/
+Content/AnimStarterPack/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++,unrealengine
