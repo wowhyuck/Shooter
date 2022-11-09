@@ -6,6 +6,16 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class EAmmoType : uint8
+{
+	EAT_9mm UMETA(DisplayName = "9mm"),
+	EAT_AR UMETA(DisplayName = "Assult Rifle"),
+
+	EAT_MAX UMETA(DisplayName = "DefaultMax")
+};
+
+
 UCLASS()
 class SHOOTER_API AShooterCharacter : public ACharacter
 {
@@ -92,6 +102,9 @@ protected:
 
 	// 장착된 무기를 버리고 현재 조준된 아이템을 장착하기
 	void SwapWeapon(AWeapon* WeaponToSwap);
+
+	// 탄창 맵 초기화
+	void InitializeAmmoMap();
 
 public:	
 	// Called every frame
@@ -248,6 +261,18 @@ private:
 	// 카메라부터 interpolation하기 위한 upward distance ( Up * B)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
 	float CameraInterpElevation;
+
+	// 탄약 타입과 개수를 저장하는 맵
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int32> AmmoMap;
+
+	// 9mm 탄약 초기 개수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Items, meta = (AllowPrivateAccess = "true"))
+	int32 Starting9mmAmmo;
+
+	// AR 탄약 초기 개수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Items, meta = (AllowPrivateAccess = "true"))
+	int32 StartingARAmmo;
 
 public:
 	// CameraBoom 반환

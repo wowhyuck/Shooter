@@ -64,7 +64,11 @@ AShooterCharacter::AShooterCharacter() :
 
 	// 카메라 interpolation 변수
 	CameraInterpDistance(250.f),
-	CameraInterpElevation(65.f)
+	CameraInterpElevation(65.f),
+
+	// 탄약 초기 개수
+	Starting9mmAmmo(85),
+	StartingARAmmo(120)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -106,6 +110,8 @@ void AShooterCharacter::BeginPlay()
 
 	// 기본 무기를 불러오기 & 무기 장착하기
 	EquipWeapon(SpawnDefaultWeapon());
+
+	InitializeAmmoMap();
 }
 
 void AShooterCharacter::MoveForward(float value)
@@ -583,6 +589,12 @@ void AShooterCharacter::SwapWeapon(AWeapon* WeaponToSwap)
 	EquipWeapon(WeaponToSwap);
 	TraceHitItem = nullptr;
 	TraceHitItemLastFrame = nullptr;
+}
+
+void AShooterCharacter::InitializeAmmoMap()
+{
+	AmmoMap.Add(EAmmoType::EAT_9mm, Starting9mmAmmo);
+	AmmoMap.Add(EAmmoType::EAT_AR, StartingARAmmo);
 }
 
 
