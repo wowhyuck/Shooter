@@ -106,6 +106,9 @@ protected:
 	// 탄창 맵 초기화
 	void InitializeAmmoMap();
 
+	// 무기에 탄약이 있는지 확인하기
+	bool WeaponHasAmmo();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

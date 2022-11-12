@@ -228,9 +228,11 @@ void AShooterCharacter::FireWeapon()
 		AnimInstance->Montage_Play(HipFireMontage);
 		AnimInstance->Montage_JumpToSection(FName("StartFire"));
 	}
-
-	// Crosshair의 발사 타이머 시작
-	StartCrosshairBulletFire();
+	if (EquippedWeapon)
+	{
+		// 무기 탄약 1개 감소
+		EquippedWeapon->DecrementAmmo();
+	}
 }
 
 bool AShooterCharacter::GetBeamEndLocation(
@@ -415,13 +417,24 @@ void AShooterCharacter::FinishCrosshairBulletFire()
 
 void AShooterCharacter::FireButtonPressed()
 {
-	bFireButtonPressed = true;
-	StartFireTimer();
+	if (WeaponHasAmmo())
+	{
+		bFireButtonPressed = true;
+		StartFireTimer();
+	}
 }
 
 void AShooterCharacter::FireButtonReleased()
 {
-	bFireButtonPressed = false;
+	if (WeaponHasAmmo())
+	{
+		bFireButtonPressed = false;
+		if (bFireButtonPressed)
+		{
+			// Crosshair의 발사 타이머 시작
+			StartFireTimer();
+		}
+	}
 }
 
 void AShooterCharacter::StartFireTimer()
@@ -595,6 +608,13 @@ void AShooterCharacter::InitializeAmmoMap()
 {
 	AmmoMap.Add(EAmmoType::EAT_9mm, Starting9mmAmmo);
 	AmmoMap.Add(EAmmoType::EAT_AR, StartingARAmmo);
+}
+
+bool AShooterCharacter::WeaponHasAmmo()
+{
+	if (EquippedWeapon == nullptr) return false;
+
+	return EquippedWeapon->GetAmmo() > 0;
 }
 
 
