@@ -118,12 +118,16 @@ protected:
 	// 무기에 탄약이 있는지 확인하기
 	bool WeaponHasAmmo();
 
+	// FireWeapon에 있는 함수들
 	void PlayFireSound();
-
 	void SendBullet();
-
 	void PlayGunfireMontage();
 	
+	// R키를 누를 때
+	void ReloadButtonPressed();
+
+	// 무기 장전 다루기
+	void ReloadWeapon();
 
 public:	
 	// Called every frame
@@ -296,6 +300,13 @@ private:
 	// 전투 상태
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	ECombatState CombatState;
+
+	// 장전 애니메이션 몽타주
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* ReloadMontage;
+	
+	UFUNCTION(BlueprintCallable)
+	void FinishReloading();
 
 public:
 	// CameraBoom 반환
