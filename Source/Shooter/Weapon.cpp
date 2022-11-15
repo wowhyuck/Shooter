@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Weapon.h"
@@ -6,7 +6,8 @@
 AWeapon::AWeapon() :
 	ThrowWeaponTime(0.7f),
 	bFalling(false),
-	Ammo(0)
+	Ammo(0),
+	WeaponType(EWeaponType::EWT_SubmachineGun)
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -15,7 +16,7 @@ void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// ¹«±â¸¦ ¶È¹Ù·Î À¯ÁöÇÏ±â
+	// ë¬´ê¸°ë¥¼ ë˜‘ë°”ë¡œ ìœ ì§€í•˜ê¸°
 	if (GetItemState() == EItemState::EIS_Falling && bFalling)
 	{
 		const FRotator MeshRotation{ 0.f, GetItemMesh()->GetComponentRotation().Yaw, 0.f };
@@ -31,7 +32,7 @@ void AWeapon::ThrowWeapon()
 	const FVector MeshForward{ GetItemMesh()->GetForwardVector() };
 	const FVector MeshRight{ GetItemMesh()->GetRightVector() };
 
-	// ¹«±â¸¦ ´øÁö´Â ¹æÇâ
+	// ë¬´ê¸°ë¥¼ ë˜ì§€ëŠ” ë°©í–¥
 	FVector ImpulseDirection = MeshRight.RotateAngleAxis(-20.f, MeshForward);
 
 	float RandomRatotion{ 30.f };
