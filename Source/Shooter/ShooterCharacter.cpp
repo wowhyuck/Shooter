@@ -68,7 +68,10 @@ AShooterCharacter::AShooterCharacter() :
 
 	// 탄약 초기 개수
 	Starting9mmAmmo(85),
-	StartingARAmmo(120)
+	StartingARAmmo(120),
+
+	// 전투 변수
+	CombatState(ECombatState::ECS_Unoccupied)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -183,59 +186,18 @@ void AShooterCharacter::LookUp(float value)
 void AShooterCharacter::FireWeapon()
 {
 	if (EquippedWeapon == nullptr) return;
+	if (CombatState != ECombatState::ECS_Unoccupied) return;
 
-	if (FireSound)
+	if (WeaponHasAmmo())
 	{
-		UGameplayStatics::PlaySound2D(this, FireSound);
-	}
+		PlayFireSound();
+		SendBullet();
+		PlayGunfireMontage();
 
-	const USkeletalMeshSocket* BarrelSocket = 
-		EquippedWeapon->GetItemMesh()->GetSocketByName("BarrelSocket");
-	if (BarrelSocket)
-	{
-		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(
-			EquippedWeapon->GetItemMesh());
-
-		if (MuzzleFlash)
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
-		}
-
-		FVector BeamEnd;
-		bool bBeamEnd = GetBeamEndLocation(SocketTransform.GetLocation(), BeamEnd);
-
-		if (bBeamEnd)
-		{
-			if (ImpactParticles)
-			{
-				UGameplayStatics::SpawnEmitterAtLocation(
-					GetWorld(),
-					ImpactParticles,
-					BeamEnd);
-			}
-
-			UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
-				GetWorld(),
-				BeamParticles,
-				SocketTransform);
-
-			if (Beam)
-			{
-				Beam->SetVectorParameter(FName("Target"), BeamEnd);
-			}
-		}
-	}
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && HipFireMontage)
-	{
-		AnimInstance->Montage_Play(HipFireMontage);
-		AnimInstance->Montage_JumpToSection(FName("StartFire"));
-	}
-	if (EquippedWeapon)
-	{
 		// 무기 탄약 1개 감소
 		EquippedWeapon->DecrementAmmo();
+
+		StartFireTimer();
 	}
 }
 
@@ -422,10 +384,7 @@ void AShooterCharacter::FinishCrosshairBulletFire()
 void AShooterCharacter::FireButtonPressed()
 {
 	bFireButtonPressed = true;
-	if (WeaponHasAmmo())
-	{
-		StartFireTimer();
-	}
+	FireWeapon();
 }
 
 void AShooterCharacter::FireButtonReleased()
@@ -443,24 +402,29 @@ void AShooterCharacter::FireButtonReleased()
 
 void AShooterCharacter::StartFireTimer()
 {
-	if (bShouldFire)
-	{
-		FireWeapon();
-		bShouldFire = false;
-		GetWorldTimerManager().SetTimer(
-			AutoFireTimer,
-			this,
-			&AShooterCharacter::AutoFireReset,
-			AutomaticFireRate);
-	}
+	CombatState = ECombatState::ECS_FireTimerInProgress;
+	GetWorldTimerManager().SetTimer(
+		AutoFireTimer,
+		this,
+		&AShooterCharacter::AutoFireReset,
+		AutomaticFireRate);
 }
 
 void AShooterCharacter::AutoFireReset()
 {
-	bShouldFire = true;
-	if (bFireButtonPressed)
+	CombatState = ECombatState::ECS_Unoccupied;
+
+	if (WeaponHasAmmo())
 	{
-		StartFireTimer();
+		if (bFireButtonPressed)
+		{
+			FireWeapon();
+		}
+	}
+	else
+	{
+		// 장전하기
+
 	}
 }
 
@@ -621,6 +585,66 @@ bool AShooterCharacter::WeaponHasAmmo()
 	return EquippedWeapon->GetAmmo() > 0;
 }
 
+void AShooterCharacter::PlayFireSound()
+{
+	// 발사 소리 재생하기
+	if (FireSound)
+	{
+		UGameplayStatics::PlaySound2D(this, FireSound);
+	}
+}
+
+void AShooterCharacter::SendBullet()
+{
+	// 총알 보내기
+	const USkeletalMeshSocket* BarrelSocket =
+		EquippedWeapon->GetItemMesh()->GetSocketByName("BarrelSocket");
+	if (BarrelSocket)
+	{
+		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(
+			EquippedWeapon->GetItemMesh());
+
+		if (MuzzleFlash)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
+		}
+
+		FVector BeamEnd;
+		bool bBeamEnd = GetBeamEndLocation(SocketTransform.GetLocation(), BeamEnd);
+
+		if (bBeamEnd)
+		{
+			if (ImpactParticles)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(
+					GetWorld(),
+					ImpactParticles,
+					BeamEnd);
+			}
+
+			UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
+				GetWorld(),
+				BeamParticles,
+				SocketTransform);
+
+			if (Beam)
+			{
+				Beam->SetVectorParameter(FName("Target"), BeamEnd);
+			}
+		}
+	}
+}
+
+void AShooterCharacter::PlayGunfireMontage()
+{
+	// Hip Fire 몽타주 재생하기
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && HipFireMontage)
+	{
+		AnimInstance->Montage_Play(HipFireMontage);
+		AnimInstance->Montage_JumpToSection(FName("StartFire"));
+	}
+}
 
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)

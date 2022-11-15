@@ -15,6 +15,15 @@ enum class EAmmoType : uint8
 	EAT_MAX UMETA(DisplayName = "DefaultMax")
 };
 
+UENUM(BlueprintType)
+enum class ECombatState : uint8
+{
+	ECS_Unoccupied UMETA(DisplayName = "Unoccupied"),
+	ECS_FireTimerInProgress UMETA(DisplayName = "FireTimerInProgress"),
+	ECS_Reloading UMETA(DisplayName = "Reloading"),
+
+	ECS_MAX UMETA(DisplayName = "DefaultMax")
+};
 
 UCLASS()
 class SHOOTER_API AShooterCharacter : public ACharacter
@@ -108,6 +117,13 @@ protected:
 
 	// 무기에 탄약이 있는지 확인하기
 	bool WeaponHasAmmo();
+
+	void PlayFireSound();
+
+	void SendBullet();
+
+	void PlayGunfireMontage();
+	
 
 public:	
 	// Called every frame
@@ -276,6 +292,10 @@ private:
 	// AR 탄약 초기 개수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Items, meta = (AllowPrivateAccess = "true"))
 	int32 StartingARAmmo;
+
+	// 전투 상태
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	ECombatState CombatState;
 
 public:
 	// CameraBoom 반환
