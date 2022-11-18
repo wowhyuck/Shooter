@@ -4,16 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AmmoType.h"
 #include "ShooterCharacter.generated.h"
 
-UENUM(BlueprintType)
-enum class EAmmoType : uint8
-{
-	EAT_9mm UMETA(DisplayName = "9mm"),
-	EAT_AR UMETA(DisplayName = "Assult Rifle"),
-
-	EAT_MAX UMETA(DisplayName = "DefaultMax")
-};
 
 UENUM(BlueprintType)
 enum class ECombatState : uint8
@@ -59,7 +52,6 @@ protected:
 	// 마우스 Y 이동 값에 따라 컨트롤러 회전하기
 	// value는 마우스 이동값
 	void LookUp(float value);
-
 
 	// FireButton이 눌렸을 때 호출
 	void FireWeapon();
@@ -128,6 +120,9 @@ protected:
 
 	// 무기 장전 다루기
 	void ReloadWeapon();
+
+	// 장착한 무기의 탄약 타입을 갖고 있는지 확인하기
+	bool CarryingAmmo();
 
 public:	
 	// Called every frame
