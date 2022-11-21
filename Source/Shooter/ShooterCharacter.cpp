@@ -735,7 +735,37 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AShooterCharacter::FinishReloading()
 {
+	// 전투 상태 업데이트
 	CombatState = ECombatState::ECS_Unoccupied;
+	if (EquippedWeapon == nullptr) return;
+	const auto AmmoType{ EquippedWeapon->GetAmmoType() };
+
+	// AmmoMap 업데이트
+	if (AmmoMap.Contains(AmmoType))
+	{
+		// 캐릭터가 들고있는 무기 타입의 탄약 개수
+		int32 CarriedAmmo = AmmoMap[AmmoType];
+
+		// 장착 무기의 탄창 공간
+		const int32 MagEmptySpace =
+			EquippedWeapon->GetMagazineCapacity() -
+			EquippedWeapon->GetAmmo();
+
+		if (MagEmptySpace > CarriedAmmo)
+		{
+			// 탄창 장전하기
+			EquippedWeapon->ReloadAmmo(CarriedAmmo);
+			CarriedAmmo = 0;
+			AmmoMap.Add(AmmoType, CarriedAmmo);
+		}
+		else
+		{
+			// 탄창 채우기
+			EquippedWeapon->ReloadAmmo(MagEmptySpace);
+			CarriedAmmo -= MagEmptySpace;
+			AmmoMap.Add(AmmoType, CarriedAmmo);
+		}
+	}
 }
 
 float AShooterCharacter::GetCrosshairSpreadMultiplier() const
