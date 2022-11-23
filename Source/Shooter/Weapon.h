@@ -57,6 +57,13 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties", meta = (AllowPrivateAccess = "true"))
 	FName ReloadMontageSection;
 
+	// 장전 중에 탄창이 움직일 때 true
+	bool bMovingClip;
+
+	// 탄창 bone의 이름
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties", meta = (AllowPrivateAccess = "true"))
+	FName ClipBoneName;
+
 public:
 	// 장착무기 던지기
 	void ThrowWeapon();
@@ -70,6 +77,9 @@ public:
 	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
 	FORCEINLINE EAmmoType GetAmmoType() const { return AmmoType; }
 	FORCEINLINE FName GetReloadMontageSection() const { return ReloadMontageSection; }
+	FORCEINLINE FName GetClipBoneName() const { return ClipBoneName; }
 
 	void ReloadAmmo(int32 Amount);
+
+	FORCEINLINE void SetMovingClip(bool Move) { bMovingClip = Move; }
 };

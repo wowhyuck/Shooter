@@ -124,6 +124,14 @@ protected:
 	// 장착한 무기의 탄약 타입을 갖고 있는지 확인하기
 	bool CarryingAmmo();
 
+	// 애니메이션 블루프린트에서 Grab Clip notify와 함께 불러오기
+	UFUNCTION(BlueprintCallable)
+	void GrabClip();
+
+	// 애니메이션 블루프린트에서 Release Clip notify와 함께 불러오기
+	UFUNCTION(BlueprintCallable)
+	void ReleaseClip();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -302,6 +310,14 @@ private:
 	
 	UFUNCTION(BlueprintCallable)
 	void FinishReloading();
+
+	// 장전 중에 처음 탄창 잡을 때 탄창의 transform
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	FTransform ClipTransform;
+
+	// 장전 중에 캐릭터 손에 붙일 Scene Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* HandSceneComponent;
 
 public:
 	// CameraBoom 반환

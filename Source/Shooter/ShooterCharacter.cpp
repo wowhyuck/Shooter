@@ -683,6 +683,27 @@ bool AShooterCharacter::CarryingAmmo()
 	return false;
 }
 
+void AShooterCharacter::GrabClip()
+{
+	if (EquippedWeapon == nullptr) return;
+
+	// 장착 무기의 탄창 bone의 index
+	int32 ClipBoneIndex{ EquippedWeapon->GetItemMesh()->GetBoneIndex(EquippedWeapon->GetClipBoneName()) };
+	// 탄창 transform 저장하기
+	ClipTransform = EquippedWeapon->GetItemMesh()->GetBoneTransform(ClipBoneIndex);
+
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepRelative, true);
+	HandSceneComponent->AttachToComponent(GetMesh(), AttachmentRules, FName(TEXT("hand_l")));
+	HandSceneComponent->SetWorldTransform(ClipTransform);
+
+	EquippedWeapon->SetMovingClip(true);
+}
+
+void AShooterCharacter::ReleaseClip()
+{
+	EquippedWeapon->SetMovingClip(false);
+}
+
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
