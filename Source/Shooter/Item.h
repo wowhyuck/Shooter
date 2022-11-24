@@ -152,6 +152,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	UCurveFloat* ItemScaleCurve;
 
+	// 아이템을 획득할 때 재생하는 소리
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	class USoundCue* PickupSound;
+
+	// 아이템을 장착할 때 재생하는 소리
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	USoundCue* EquipSound;
+
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
@@ -159,6 +167,8 @@ public:
 	FORCEINLINE EItemState GetItemState() const { return ItemState; }
 	void SetItemState(EItemState State);
 	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; }
+	FORCEINLINE USoundCue* GetPickupSound() const { return PickupSound; }
+	FORCEINLINE USoundCue* GetEquipSound() const { return EquipSound; }
 
 	// ACharacter로부터 불러오기
 	void StartItemCurve(AShooterCharacter* Char);
