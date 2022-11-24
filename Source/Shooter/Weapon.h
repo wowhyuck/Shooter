@@ -58,6 +58,7 @@ private:
 	FName ReloadMontageSection;
 
 	// 장전 중에 탄창이 움직일 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess = "true"))
 	bool bMovingClip;
 
 	// 탄창 bone의 이름
