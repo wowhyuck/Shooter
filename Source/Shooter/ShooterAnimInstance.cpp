@@ -9,7 +9,7 @@
 
 UShooterAnimInstance::UShooterAnimInstance():
 	Speed(0.f),
-	bIsAir(false),
+	bIsInAir(false),
 	bIsAccelerating(false),
 	MovementOffsetYaw(0.f),
 	LastMovementOffsetYaw(0.f),
@@ -36,7 +36,7 @@ void UShooterAnimInstance::UpdateAnimationProperties(float deltaTime)
 		Speed = velocity.Size();
 
 		// 캐릭터가 공중에 떠 있는지?
-		bIsAir = ShooterCharacter->GetCharacterMovement()->IsFalling();
+		bIsInAir = ShooterCharacter->GetCharacterMovement()->IsFalling();
 
 		// 캐릭터가 움직이는지?
 		if (ShooterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.f)

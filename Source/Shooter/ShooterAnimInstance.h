@@ -36,7 +36,7 @@ private:
 
 	// 캐릭터가 공중에 떠 있는지
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	bool bIsAir;
+	bool bIsInAir;
 
 	// 캐릭터가 움직이는지
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
