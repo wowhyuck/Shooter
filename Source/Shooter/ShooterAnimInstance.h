@@ -62,4 +62,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"))
 	float RootYawOffset;
+
+	// 현재 프레임의 RotationCurve 값
+	float RotationCurve;
+	// 이전 프레임의 RotationCurve 값
+	float RotationCurveLastFrame;
 };

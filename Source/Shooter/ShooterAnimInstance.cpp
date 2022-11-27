@@ -7,7 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 
 
-UShooterAnimInstance::UShooterAnimInstance():
+UShooterAnimInstance::UShooterAnimInstance() :
 	Speed(0.f),
 	bIsInAir(false),
 	bIsAccelerating(false),
@@ -81,7 +81,11 @@ void UShooterAnimInstance::TurnInPlace()
 	if (Speed > 0)
 	{
 		// 캐릭터가 움직이고, 돌고 싶지 않을 때
-
+		RootYawOffset = 0;
+		CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+		CharacterYawLastFrame = CharacterYaw;
+		RotationCurveLastFrame = 0.0f;
+		RotationCurve = 0.0f;
 	}
 	else
 	{
@@ -89,17 +93,28 @@ void UShooterAnimInstance::TurnInPlace()
 		CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
 		const float YawDelta{ CharacterYaw - CharacterYawLastFrame };
 
-		RootYawOffset -= YawDelta;
+		// Root Yaw Offset, [-180, 180]에서 업데이트 또는 범위 고정하기
+		RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - YawDelta);
 
-		if (GEngine) GEngine->AddOnScreenDebugMessage(
-			1, 
-			-1, 
-			FColor::Blue, 
-			FString::Printf(TEXT("CharacterYaw: %f"), CharacterYaw));
-		if (GEngine) GEngine->AddOnScreenDebugMessage(
-			2,
-			-1,
-			FColor::Red,
-			FString::Printf(TEXT("RootYawOffset: %f"), RootYawOffset));
+		// 회전중일 때 1.0, 아닐 때 0.0
+		const float Turning{ GetCurveValue(TEXT("Turning")) };
+		if (Turning > 0)
+		{
+			RotationCurveLastFrame = RotationCurve;
+			RotationCurve = GetCurveValue(TEXT("Rotation"));
+			const float DeltaRotation{ RotationCurve - RotationCurveLastFrame };
+
+			// RootYawOffset > 0 -> 왼쪽 회전, RootYawOffset < 0 -> 오른쪽 회전
+			RootYawOffset > 0 ? RootYawOffset -= DeltaRotation : RootYawOffset += DeltaRotation;
+
+			const float ABSRootYawOffset{ FMath::Abs(RootYawOffset) };
+			if (ABSRootYawOffset > 90.0f)
+			{
+				const float YawExcess{ ABSRootYawOffset - 90.0f };
+				RootYawOffset > 0 ? RootYawOffset -= YawExcess : RootYawOffset += YawExcess;
+			}
+		}
+
+		if (GEngine) GEngine->AddOnScreenDebugMessage(1, -1, FColor::Cyan, FString::Printf(TEXT("RootYawOffset : %f"), RootYawOffset));
 	}
 }
