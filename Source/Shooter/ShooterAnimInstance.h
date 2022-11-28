@@ -67,4 +67,12 @@ private:
 	float RotationCurve;
 	// 이전 프레임의 RotationCurve 값
 	float RotationCurveLastFrame;
+
+	// Aim Offset에 사용될 조준할 때 회전값의 Pitch
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"))
+	float Pitch;
+
+	// 장전일 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"))
+	bool bReloading;
 };

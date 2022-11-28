@@ -16,7 +16,9 @@ UShooterAnimInstance::UShooterAnimInstance() :
 	bAiming(false),
 	CharacterYaw(0.f),
 	CharacterYawLastFrame(0.f),
-	RootYawOffset(0.f)
+	RootYawOffset(0.f),
+	Pitch(0.f),
+	bReloading(false)
 {
 
 }
@@ -30,6 +32,8 @@ void UShooterAnimInstance::UpdateAnimationProperties(float deltaTime)
 
 	if (ShooterCharacter)
 	{
+		bReloading = ShooterCharacter->GetCombatState() == ECombatState::ECS_Reloading;
+
 		// 캐릭터 이동 속도
 		FVector velocity{ ShooterCharacter->GetVelocity() };
 		velocity.Z = 0;
@@ -70,14 +74,14 @@ void UShooterAnimInstance::UpdateAnimationProperties(float deltaTime)
 void UShooterAnimInstance::NativeInitializeAnimation()
 {
 	ShooterCharacter = Cast<AShooterCharacter>(TryGetPawnOwner());
-
-
-
 }
 
 void UShooterAnimInstance::TurnInPlace()
 {
 	if (ShooterCharacter == nullptr) return;
+
+	Pitch = ShooterCharacter->GetBaseAimRotation().Pitch;
+
 	if (Speed > 0)
 	{
 		// 캐릭터가 움직이고, 돌고 싶지 않을 때
