@@ -18,7 +18,8 @@ UShooterAnimInstance::UShooterAnimInstance() :
 	CharacterYawLastFrame(0.f),
 	RootYawOffset(0.f),
 	Pitch(0.f),
-	bReloading(false)
+	bReloading(false),
+	OffsetState(EOffsetState::EOS_Hip)
 {
 
 }
@@ -66,6 +67,23 @@ void UShooterAnimInstance::UpdateAnimationProperties(float deltaTime)
 		}
 
 		bAiming = ShooterCharacter->GetAiming();
+
+		if (bReloading)
+		{
+			OffsetState = EOffsetState::EOS_Reloading;
+		}
+		else if(bIsInAir)
+		{
+			OffsetState = EOffsetState::EOS_InAir;
+		}
+		else if (ShooterCharacter->GetAiming())
+		{
+			OffsetState = EOffsetState::EOS_Aiming;
+		}
+		else
+		{
+			OffsetState = EOffsetState::EOS_Hip;
+		}
 	}
 
 	TurnInPlace();
@@ -82,7 +100,7 @@ void UShooterAnimInstance::TurnInPlace()
 
 	Pitch = ShooterCharacter->GetBaseAimRotation().Pitch;
 
-	if (Speed > 0)
+	if (Speed > 0 || bIsInAir)
 	{
 		// 캐릭터가 움직이고, 돌고 싶지 않을 때
 		RootYawOffset = 0;
