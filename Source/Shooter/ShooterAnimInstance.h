@@ -36,6 +36,9 @@ public:
 protected:
 	// 캐릭터가 도는데 관련 변수 다루기
 	void TurnInPlace();
+
+	// 달리는 중에 몸 기울일 때 계산을 다루기
+	void Lean(float DeltaTime);
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
@@ -65,11 +68,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bAiming;
 
-	// 현재 프레임 캐릭터의 Yaw
-	float CharacterYaw;
+	// 현재 프레임의 캐릭터 Yaw; 캐릭터가 서있을 때와 공중에 떠있지 않을 때 업데이트
+	float TIPCharacterYaw;
 
-	// 이전 프레임 캐릭터의 Yaw
-	float CharacterYawLastFrame;
+	// 이전 프레임 캐릭터의 Yaw; 캐릭터가 서있을 때와 공중에 떠있지 않을 때 업데이트
+	float TIPCharacterYawLastFrame;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"))
 	float RootYawOffset;
@@ -90,4 +93,14 @@ private:
 	// Offset State; 사용할 조준 offset의 상태
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"))
 	EOffsetState OffsetState;
+
+	// 현재 프레임의 캐릭터 Yaw
+	float CharacterYaw;
+
+	// 이전 프레임의 캐릭터 Yaw
+	float CharacterYawLastFrame;
+
+	// 달리는 blend space에서 몸 기울 때 사용할 Yaw delta
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
+	float YawDelta;
 };

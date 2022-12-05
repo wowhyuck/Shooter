@@ -14,8 +14,8 @@ UShooterAnimInstance::UShooterAnimInstance() :
 	MovementOffsetYaw(0.f),
 	LastMovementOffsetYaw(0.f),
 	bAiming(false),
-	CharacterYaw(0.f),
-	CharacterYawLastFrame(0.f),
+	TIPCharacterYaw(0.f),
+	TIPCharacterYawLastFrame(0.f),
 	RootYawOffset(0.f),
 	Pitch(0.f),
 	bReloading(false),
@@ -72,7 +72,7 @@ void UShooterAnimInstance::UpdateAnimationProperties(float deltaTime)
 		{
 			OffsetState = EOffsetState::EOS_Reloading;
 		}
-		else if(bIsInAir)
+		else if (bIsInAir)
 		{
 			OffsetState = EOffsetState::EOS_InAir;
 		}
@@ -87,6 +87,7 @@ void UShooterAnimInstance::UpdateAnimationProperties(float deltaTime)
 	}
 
 	TurnInPlace();
+	Lean(deltaTime);
 }
 
 void UShooterAnimInstance::NativeInitializeAnimation()
@@ -104,19 +105,19 @@ void UShooterAnimInstance::TurnInPlace()
 	{
 		// 캐릭터가 움직이고, 돌고 싶지 않을 때
 		RootYawOffset = 0;
-		CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
-		CharacterYawLastFrame = CharacterYaw;
+		TIPCharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+		TIPCharacterYawLastFrame = TIPCharacterYaw;
 		RotationCurveLastFrame = 0.0f;
 		RotationCurve = 0.0f;
 	}
 	else
 	{
-		CharacterYawLastFrame = CharacterYaw;
-		CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
-		const float YawDelta{ CharacterYaw - CharacterYawLastFrame };
+		TIPCharacterYawLastFrame = TIPCharacterYaw;
+		TIPCharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+		const float TIPYawDelta{ TIPCharacterYaw - TIPCharacterYawLastFrame };
 
 		// Root Yaw Offset, [-180, 180]에서 업데이트 또는 범위 고정하기
-		RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - YawDelta);
+		RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - TIPYawDelta);
 
 		// 회전중일 때 1.0, 아닐 때 0.0
 		const float Turning{ GetCurveValue(TEXT("Turning")) };
@@ -139,4 +140,21 @@ void UShooterAnimInstance::TurnInPlace()
 
 		if (GEngine) GEngine->AddOnScreenDebugMessage(1, -1, FColor::Cyan, FString::Printf(TEXT("RootYawOffset : %f"), RootYawOffset));
 	}
+}
+
+void UShooterAnimInstance::Lean(float DeltaTime)
+{
+	if (ShooterCharacter == nullptr) return;
+	CharacterYawLastFrame = CharacterYaw;
+	CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+
+	const float Target{ (CharacterYaw - CharacterYawLastFrame) / DeltaTime };
+	const float Interp{ FMath::FInterpTo(YawDelta, Target, DeltaTime, 6.f) };
+	YawDelta = FMath::Clamp(Interp, -90.f, 90.f);
+
+	if (GEngine) GEngine->AddOnScreenDebugMessage(
+		2, 
+		-1, 
+		FColor::Cyan, 
+		FString::Printf(TEXT("YawDelta : %f"), YawDelta));
 }
