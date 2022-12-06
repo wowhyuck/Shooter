@@ -95,10 +95,10 @@ private:
 	EOffsetState OffsetState;
 
 	// 현재 프레임의 캐릭터 Yaw
-	float CharacterYaw;
+	FRotator CharacterRotation;
 
 	// 이전 프레임의 캐릭터 Yaw
-	float CharacterYawLastFrame;
+	FRotator CharacterRotationLastFrame;
 
 	// 달리는 blend space에서 몸 기울 때 사용할 Yaw delta
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
