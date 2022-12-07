@@ -103,4 +103,8 @@ private:
 	// 달리는 blend space에서 몸 기울 때 사용할 Yaw delta
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
 	float YawDelta;
+
+	// 웅크릴 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouching", meta = (AllowPrivateAccess = "true"))
+	bool bCrouching;
 };
