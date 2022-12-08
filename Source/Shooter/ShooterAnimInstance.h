@@ -104,7 +104,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
 	float YawDelta;
 
-	// 웅크릴 때 true
+	// 앉을 때 true
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouching", meta = (AllowPrivateAccess = "true"))
 	bool bCrouching;
 };
