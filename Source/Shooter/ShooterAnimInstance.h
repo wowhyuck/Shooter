@@ -107,4 +107,12 @@ private:
 	// 앉을 때 true
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouching", meta = (AllowPrivateAccess = "true"))
 	bool bCrouching;
+
+	// 회전할 때와 조준할 때 recoil weight의 변화
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	float RecoilWeight;
+
+	// 회전할 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	bool bTurningInPlace;
 };
