@@ -148,8 +148,23 @@ void UShooterAnimInstance::TurnInPlace()
 		{
 			bTurningInPlace = false;
 		}
+	}
 
-		if (bTurningInPlace)
+	// Recoil Weight 설정하기
+	if (bTurningInPlace)
+	{
+		if (bReloading)
+		{
+			RecoilWeight = 1.0f;
+		}
+		else
+		{
+			RecoilWeight = 0.f;
+		}
+	}
+	else	// 회전하지 않을 때
+	{
+		if (bCrouching)
 		{
 			if (bReloading)
 			{
@@ -157,35 +172,22 @@ void UShooterAnimInstance::TurnInPlace()
 			}
 			else
 			{
-				RecoilWeight = 0.f;
+				RecoilWeight = 0.1f;
 			}
 		}
-		else	// 회전하지 않을 때
+		else
 		{
-			if (bCrouching)
+			if (bAiming || bReloading)
 			{
-				if (bReloading)
-				{
-					RecoilWeight = 1.0f;
-				}
-				else
-				{
-					RecoilWeight = 0.1f;
-				}
+				RecoilWeight = 1.0f;
 			}
 			else
 			{
-				if (bAiming || bReloading)
-				{
-					RecoilWeight = 1.0f;
-				}
-				else
-				{
-					RecoilWeight = 0.5f;
-				}
+				RecoilWeight = 0.5f;
 			}
 		}
 	}
+
 }
 
 void UShooterAnimInstance::Lean(float DeltaTime)

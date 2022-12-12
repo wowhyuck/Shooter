@@ -132,8 +132,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ReleaseClip();
 
-
 	void CrouchButtonPressed();
+
+	virtual void Jump() override;
 
 public:	
 	// Called every frame
@@ -325,6 +326,14 @@ private:
 	// 앉을 때 true
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bCrouching;
+
+	// 기본 이동 속도
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float BaseMovementSpeed;
+
+	// 앉을 때 이동 속도
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float CrouchMovementSpeed;
 
 public:
 	// CameraBoom 반환
