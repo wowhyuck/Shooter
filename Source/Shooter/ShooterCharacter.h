@@ -136,6 +136,9 @@ protected:
 
 	virtual void Jump() override;
 
+	// 앉을/일어날 때 캡슐 높이(반) interpolation
+	void InterpCapsuleHalfHeight(float DeltaTime);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -334,6 +337,25 @@ private:
 	// 앉을 때 이동 속도
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float CrouchMovementSpeed;
+
+	// 현재 캡슐 높이(반)
+	float CurrentCapsuleHalfHeight;
+
+	// 앉아 있지 않을 때 캡슐 높이(반)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float StandingCapsuleHalfHeight;
+
+	// 앉을 때 캡슐 높이(반)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float CrouchingCapsuleHalfHeight;
+
+	// 앉아 있지 않을 때 기본 마찰력
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float BaseGroundFriction;
+
+	// 앉아 있을 때 마찰력
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float CrouchingGroundFriction;
 
 public:
 	// CameraBoom 반환
