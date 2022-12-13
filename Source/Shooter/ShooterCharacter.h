@@ -139,6 +139,9 @@ protected:
 	// 앉을/일어날 때 캡슐 높이(반) interpolation
 	void InterpCapsuleHalfHeight(float DeltaTime);
 
+	void Aim();
+	void StopAiming();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -358,6 +361,9 @@ private:
 	// 앉아 있을 때 마찰력
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float CrouchingGroundFriction;
+
+	// 조준 버튼이 눌렸을 때 확인용
+	bool bAimingButtonPressed;
 
 public:
 	// CameraBoom 반환
