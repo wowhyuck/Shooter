@@ -27,3 +27,54 @@ void AAmmo::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void AAmmo::SetItemProperties(EItemState State)
+{
+	Super::SetItemProperties(State);
+
+	switch (State)
+	{
+	case EItemState::EIS_Pickup:
+		// mesh 특성 세팅하기
+		AmmoMesh->SetSimulatePhysics(false);
+		AmmoMesh->SetVisibility(true);
+		AmmoMesh->SetEnableGravity(false);
+		AmmoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AmmoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		break;
+
+	case EItemState::EIS_Equipped:
+		// 메시 특성 세팅하기
+		AmmoMesh->SetSimulatePhysics(false);
+		AmmoMesh->SetVisibility(true);
+		AmmoMesh->SetEnableGravity(false);
+		AmmoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AmmoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		break;
+
+	case EItemState::EIS_Falling:
+		// mesh 특성 세팅하기
+		AmmoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		AmmoMesh->SetSimulatePhysics(true);
+		AmmoMesh->SetEnableGravity(true);
+		AmmoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AmmoMesh->SetCollisionResponseToChannel(
+			ECollisionChannel::ECC_WorldStatic,
+			ECollisionResponse::ECR_Block);
+
+		break;
+
+	case EItemState::EIS_EquipInterping:
+		// 메시 특성 세팅하기
+		AmmoMesh->SetSimulatePhysics(false);
+		AmmoMesh->SetVisibility(true);
+		AmmoMesh->SetEnableGravity(false);
+		AmmoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AmmoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		break;
+	}
+
+}

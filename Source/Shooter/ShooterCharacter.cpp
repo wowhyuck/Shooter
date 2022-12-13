@@ -16,6 +16,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Ammo.h"
 
 
 // Sets default values
@@ -800,6 +801,30 @@ void AShooterCharacter::StopAiming()
 	}
 }
 
+void AShooterCharacter::PickupAmmo(AAmmo* Ammo)
+{
+	// 탄약 타입을 포함하고 있는지 AmmoMap 확인하기
+	if (AmmoMap.Find(Ammo->GetAmmoType()))
+	{
+		// AmmoMap에 있는 탄약 타입의 개수 얻기
+		int32 AmmoCount{ AmmoMap[Ammo->GetAmmoType()] };
+		AmmoCount += Ammo->GetItemCount();
+		// AmmoMap에 있는 탄약 타입의 개수 갱신하기
+		AmmoMap[Ammo->GetAmmoType()] = AmmoCount;
+	}
+	
+	if (EquippedWeapon->GetAmmoType() == Ammo->GetAmmoType())
+	{
+		// 총이 비어있는지 확인하기
+		if (EquippedWeapon->GetAmmo() == 0)
+		{
+			ReloadWeapon();
+		}
+	}
+
+	Ammo->Destroy();
+}
+
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -936,6 +961,12 @@ void AShooterCharacter::GetPickupItem(AItem* Item)
 	if (Weapon)
 	{
 		SwapWeapon(Weapon);
+	}
+
+	auto Ammo = Cast<AAmmo>(Item);
+	if (Ammo)
+	{
+		PickupAmmo(Ammo);
 	}
 }
 

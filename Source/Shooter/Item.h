@@ -66,7 +66,7 @@ protected:
 	void SetActiveStars();
 
 	// 아이템 상태에 따라 특성 세팅하기
-	void SetItemProperties(EItemState State);
+	virtual void SetItemProperties(EItemState State);
 
 	// ItemInterpTime가 끝났을 때 불러오기
 	void FinishInterping();
@@ -169,6 +169,7 @@ public:
 	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; }
 	FORCEINLINE USoundCue* GetPickupSound() const { return PickupSound; }
 	FORCEINLINE USoundCue* GetEquipSound() const { return EquipSound; }
+	FORCEINLINE int32 GetItemCount() const { return ItemCount; }
 
 	// ACharacter로부터 불러오기
 	void StartItemCurve(AShooterCharacter* Char);
