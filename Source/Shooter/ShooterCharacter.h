@@ -216,9 +216,11 @@ private:
 	bool bAiming;
 
 	// 카메라 기본 field of value(시야) 값
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float CameraDefaultFOV;
 
 	// 카메라 줌인 field of value 값
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float CameraZoomedFOV;
 
 	// 현재 프레임 카메라 field of value 값
