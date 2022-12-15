@@ -242,7 +242,7 @@ void AShooterCharacter::FireWeapon()
 }
 
 bool AShooterCharacter::GetBeamEndLocation(
-	const FVector& MuzzleSocketLocation, 
+	const FVector& MuzzleSocketLocation,
 	FVector& OutBeamLocation)
 {
 	// Crosshair trace hit 확인하기
@@ -350,9 +350,9 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 	{
 		// 공중에 있을 때 천천히 Crosshair가 퍼지기
 		CrosshairInAirFactor = FMath::FInterpTo(
-			CrosshairInAirFactor, 
-			2.25f, 
-			DeltaTime, 
+			CrosshairInAirFactor,
+			2.25f,
+			DeltaTime,
 			2.25f);
 	}
 	else
@@ -403,9 +403,9 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 			60.f);
 	}
 
-	CrosshairSpreadMultiplier = 0.5f + 
-		CrosshairVelocityFactor + 
-		CrosshairInAirFactor - 
+	CrosshairSpreadMultiplier = 0.5f +
+		CrosshairVelocityFactor +
+		CrosshairInAirFactor -
 		CrosshairAimFactor +
 		CrosshairShootingFactor;
 }
@@ -415,9 +415,9 @@ void AShooterCharacter::StartCrosshairBulletFire()
 	bFiringBullet = true;
 
 	GetWorldTimerManager().SetTimer(
-		CrosshairShootTimer, 
-		this, 
-		&AShooterCharacter::FinishCrosshairBulletFire, 
+		CrosshairShootTimer,
+		this,
+		&AShooterCharacter::FinishCrosshairBulletFire,
 		ShootTimeDuration);
 }
 
@@ -547,7 +547,7 @@ void AShooterCharacter::TraceForItems()
 			TraceHitItemLastFrame = TraceHitItem;
 		}
 	}
-	else if(TraceHitItemLastFrame)
+	else if (TraceHitItemLastFrame)
 	{
 		// 어떤 아이템들과 겹쳐있지 않을 때
 		// 최근 아이템이 widget을 보여주지 않을 때
@@ -798,7 +798,7 @@ void AShooterCharacter::InterpCapsuleHalfHeight(float DeltaTime)
 		TargetCapsuleHalfHeight = StandingCapsuleHalfHeight;
 	}
 	const float InterpHalfHeight{ FMath::FInterpTo(GetCapsuleComponent()->GetScaledCapsuleHalfHeight(), TargetCapsuleHalfHeight, DeltaTime, 20.f) };
-	
+
 	// 앉을 때 = 음수, 서있을 때 = 양수
 	const float DeltaCapsuleHalfHeight{ InterpHalfHeight - GetCapsuleComponent()->GetScaledCapsuleHalfHeight() };
 	const FVector MeshOffset{ 0.f, 0.f, -DeltaCapsuleHalfHeight };
@@ -833,7 +833,7 @@ void AShooterCharacter::PickupAmmo(AAmmo* Ammo)
 		// AmmoMap에 있는 탄약 타입의 개수 갱신하기
 		AmmoMap[Ammo->GetAmmoType()] = AmmoCount;
 	}
-	
+
 	if (EquippedWeapon->GetAmmoType() == Ammo->GetAmmoType())
 	{
 		// 총이 비어있는지 확인하기
@@ -868,6 +868,22 @@ void AShooterCharacter::InitializeInterpLocations()
 
 	FInterpLocation InterpLoc6{ InterpComp6, 0 };
 	InterpLocations.Add(InterpLoc6);
+}
+
+int32 AShooterCharacter::GetInterpLocationIndex()
+{
+	int32 LowestIndex = 1;
+	int32 LowestCount = INT_MAX;
+	for (int32 i = 1; i < InterpLocations.Num(); i++)
+	{
+		if (InterpLocations[i].ItemCount < LowestCount)
+		{
+			LowestIndex = i;
+			LowestCount = InterpLocations[i].ItemCount;
+		}
+	}
+
+	return LowestIndex;
 }
 
 // Called every frame
@@ -909,9 +925,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &AShooterCharacter::FireButtonPressed);
 	PlayerInputComponent->BindAction("FireButton", IE_Released, this, &AShooterCharacter::FireButtonReleased);
 
-	PlayerInputComponent->BindAction("AimingButton", IE_Pressed, this, 
+	PlayerInputComponent->BindAction("AimingButton", IE_Pressed, this,
 		&AShooterCharacter::AimingButtonPressed);
-	PlayerInputComponent->BindAction("AimingButton", IE_Released, this, 
+	PlayerInputComponent->BindAction("AimingButton", IE_Released, this,
 		&AShooterCharacter::AimingButtonReleased);
 
 	PlayerInputComponent->BindAction("Select", IE_Pressed, this,
@@ -985,15 +1001,16 @@ void AShooterCharacter::IncrementOverlappedItemCount(int8 Amount)
 	}
 }
 
-FVector AShooterCharacter::GetCameraInterpLocation()
-{
-	const FVector CameraWorldLocation{ FollowCamera->GetComponentLocation() };
-	const FVector CameraForward{ FollowCamera->GetForwardVector() };
-	
-	// Desired = CameraWorldLocation + Forward * A + Up + B
-	return CameraWorldLocation + CameraForward * CameraInterpDistance
-		+ FVector(0.f, 0.f, CameraInterpElevation);
-}
+// AItem이 GetInterpLocation을 갖고 있어서 더 이상 필요 없음
+//FVector AShooterCharacter::GetCameraInterpLocation()
+//{
+//	const FVector CameraWorldLocation{ FollowCamera->GetComponentLocation() };
+//	const FVector CameraForward{ FollowCamera->GetForwardVector() };
+//
+//	// Desired = CameraWorldLocation + Forward * A + Up + B
+//	return CameraWorldLocation + CameraForward * CameraInterpDistance
+//		+ FVector(0.f, 0.f, CameraInterpElevation);
+//}
 
 void AShooterCharacter::GetPickupItem(AItem* Item)
 {
@@ -1024,3 +1041,12 @@ FInterpLocation AShooterCharacter::GetInterpLocation(int32 Index)
 	return FInterpLocation();
 }
 
+void AShooterCharacter::IncreamentInterpLocItemCount(int32 Index, int32 Amount)
+{
+	if (Amount < -1 || Amount > 1) return;
+
+	if (InterpLocations.Num() >= Index)
+	{
+		InterpLocations[Index].ItemCount += Amount;
+	}
+}

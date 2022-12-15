@@ -85,6 +85,9 @@ protected:
 	// EquipInterping State일 때 아이템 interpolation 다루기
 	void ItemInterp(float DeltaTime);
 
+	// 아이템 타입에 따라 interp location 얻기
+	FVector GetInterpLocation();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -174,6 +177,10 @@ private:
 	// 아이템 타입의 enum
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	EItemType ItemType;
+
+	// 현재 아이템을 interpolation하고 있는 interp location의 index
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	int32 InterpLocIndex;
 
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }

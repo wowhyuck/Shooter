@@ -427,11 +427,18 @@ public:
 	// OverlappedItemCount 더하기/빼기, bShouldTraceForItems 업데이트하기
 	void IncrementOverlappedItemCount(int8 Amount);
 
-	FVector GetCameraInterpLocation();
+	// AItem이 GetInterpLocation을 갖고 있어서 더 이상 필요 없음
+	//FVector GetCameraInterpLocation();
 
 	void GetPickupItem(AItem* Item);
 
 	FORCEINLINE ECombatState GetCombatState() const { return CombatState; }
 	FORCEINLINE bool GetCrouching() const { return bCrouching; }
 	FInterpLocation GetInterpLocation(int32 Index);
+
+	// InterpLocations 배열에 있는 ItemCount가 가장 낮은 index 반환하기
+	int32 GetInterpLocationIndex();
+
+	void IncreamentInterpLocItemCount(int32 Index, int32 Amount);
+
 };
