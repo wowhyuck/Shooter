@@ -88,9 +88,14 @@ protected:
 	// 아이템 타입에 따라 interp location 얻기
 	FVector GetInterpLocation();
 
+	void PlayPickupSound();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// ACharacter::GetPickupItem에서 불러온
+	void PlayEquipSound();
 
 private:
 	// 아이템의 skeletal mesh
