@@ -94,6 +94,9 @@ protected:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	void EnableGlowMaterial();
+	void DisableGlowMaterial();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -197,7 +200,7 @@ private:
 
 	// Runtime중에 바꿀 Dynamic instance
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	UMaterialInstanceDynamic* DynamicMaterialinstance;
+	UMaterialInstanceDynamic* DynamicMaterialInstance;
 
 	// Dynamic Material Instance와 사용된 Material Instance
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
