@@ -38,7 +38,7 @@ AItem::AItem() :
 	FresnelReflectFraction(4.f),
 	PulseCurveTime(5.f)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	ItemMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemMesh"));
@@ -48,7 +48,7 @@ AItem::AItem() :
 	CollisionBox->SetupAttachment(ItemMesh);
 	CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	CollisionBox->SetCollisionResponseToChannel(
-		ECollisionChannel::ECC_Visibility, 
+		ECollisionChannel::ECC_Visibility,
 		ECollisionResponse::ECR_Block);
 
 	PickupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
@@ -63,7 +63,7 @@ AItem::AItem() :
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// Pickup Widget 숨기기
 	if (PickupWidget)
 	{
@@ -160,7 +160,7 @@ void AItem::SetItemProperties(EItemState State)
 		// CollisionBox 특성 세팅하기
 		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		CollisionBox->SetCollisionResponseToChannel(
-			ECollisionChannel::ECC_Visibility, 
+			ECollisionChannel::ECC_Visibility,
 			ECollisionResponse::ECR_Block);
 		CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		break;
@@ -232,6 +232,7 @@ void AItem::FinishInterping()
 		// 현재 interp location struct에 item count 1 빼기
 		Character->IncreamentInterpLocItemCount(InterpLocIndex, -1);
 		Character->GetPickupItem(this);
+		SetItemState(EItemState::EIS_Pickup);
 	}
 	// 크기를 원래대로 돌리기
 	SetActorScale3D(FVector(1.f));
@@ -255,7 +256,7 @@ void AItem::ItemInterp(float DeltaTime)
 		FVector ItemLocation = ItemInterpStartLocation;
 		// 카메라 앞에 위치 얻기
 		const FVector CameraInterpLocation{ GetInterpLocation() };
-		
+
 		// ItemLocation -> CameraInterpLocation 벡터 얻기, X, Y의 값은 0으로 설정
 		const FVector ItemToCamera{ FVector(0.f, 0.f, (CameraInterpLocation - ItemLocation).Z) };
 		// CurveValue와 곱하기 위해 스칼라값으로 변환
@@ -371,13 +372,30 @@ void AItem::EnableGlowMaterial()
 
 void AItem::UpdatePulse()
 {
-	if (ItemState == EItemState::EIS_Pickup) return;
+	float ElapsedTime{ };
+	FVector CurveValue{ };
 
-	const float ElapsedTime{ GetWorldTimerManager().GetTimerElapsed(PulseTimer) };
-	if (PulseCurve)
+	switch (ItemState)
 	{
-		const FVector CurveValue{ PulseCurve->GetVectorValue(ElapsedTime) };
+	case EItemState::EIS_Pickup:
+		if (PulseCurve)
+		{
+			ElapsedTime = GetWorldTimerManager().GetTimerElapsed(PulseTimer);
+			CurveValue = PulseCurve->GetVectorValue(ElapsedTime);
+		}
+		break;
 
+	case EItemState::EIS_EquipInterping:
+		if (InterpPulseCurve)
+		{
+			ElapsedTime = GetWorldTimerManager().GetTimerElapsed(ItemInterpTimer);
+			CurveValue = InterpPulseCurve->GetVectorValue(ElapsedTime);
+		}
+		break;
+	}
+
+	if (DynamicMaterialInstance)
+	{
 		DynamicMaterialInstance->SetScalarParameterValue(TEXT("GlowAmount"), CurveValue.X * GlowAmount);
 		DynamicMaterialInstance->SetScalarParameterValue(TEXT("FresnelExponent"), CurveValue.Y * FresnelExponent);
 		DynamicMaterialInstance->SetScalarParameterValue(TEXT("FresnelReflectFraction"), CurveValue.Y * FresnelReflectFraction);
@@ -454,6 +472,7 @@ void AItem::StartItemCurve(AShooterCharacter* Char)
 	ItemInterpStartLocation = GetActorLocation();
 	bInterping = true;
 	SetItemState(EItemState::EIS_EquipInterping);
+	GetWorldTimerManager().ClearTimer(PulseTimer);
 
 	GetWorldTimerManager().SetTimer(
 		ItemInterpTimer,
