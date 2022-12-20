@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
+#include "Curves/CurveVector.h"
 
 
 // Sets default values
@@ -29,7 +30,13 @@ AItem::AItem() :
 	ItemType(EItemType::EIT_MAX),
 	InterpLocIndex(0),
 	MaterialIndex(0),
-	bCanChangeCustomDepth(true)
+	bCanChangeCustomDepth(true),
+
+	// Dynamic Materal Parameters
+	GlowAmount(150.f),
+	FresnelExponent(3.f),
+	FresnelReflectFraction(4.f),
+	PulseCurveTime(5.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -75,6 +82,8 @@ void AItem::BeginPlay()
 
 	// Custom Depth를 disable 상태로 세팅하기
 	InitializeCustomDepth();
+
+	StartPulseTimer();
 }
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -360,6 +369,21 @@ void AItem::EnableGlowMaterial()
 	}
 }
 
+void AItem::UpdatePulse()
+{
+	if (ItemState == EItemState::EIS_Pickup) return;
+
+	const float ElapsedTime{ GetWorldTimerManager().GetTimerElapsed(PulseTimer) };
+	if (PulseCurve)
+	{
+		const FVector CurveValue{ PulseCurve->GetVectorValue(ElapsedTime) };
+
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("GlowAmount"), CurveValue.X * GlowAmount);
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("FresnelExponent"), CurveValue.Y * FresnelExponent);
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("FresnelReflectFraction"), CurveValue.Y * FresnelReflectFraction);
+	}
+}
+
 void AItem::DisableGlowMaterial()
 {
 	if (DynamicMaterialInstance)
@@ -390,6 +414,22 @@ void AItem::Tick(float DeltaTime)
 
 	// EquipInterping State일 때 아이템 interpolation 다루기
 	ItemInterp(DeltaTime);
+
+	// Pulse Curve에서 커브 값을 얻고, dynamic material parameters를 세팅하기
+	UpdatePulse();
+}
+
+void AItem::ResetPulseTimer()
+{
+	StartPulseTimer();
+}
+
+void AItem::StartPulseTimer()
+{
+	if (ItemState == EItemState::EIS_Pickup)
+	{
+		GetWorldTimerManager().SetTimer(PulseTimer, this, &AItem::ResetPulseTimer, PulseCurveTime);
+	}
 }
 
 void AItem::SetItemState(EItemState State)

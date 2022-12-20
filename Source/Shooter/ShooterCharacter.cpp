@@ -155,6 +155,8 @@ void AShooterCharacter::BeginPlay()
 
 	// 기본 무기를 불러오기 & 무기 장착하기
 	EquipWeapon(SpawnDefaultWeapon());
+	EquippedWeapon->DisableCustomDepth();
+	EquippedWeapon->DisableGlowMaterial();
 
 	InitializeAmmoMap();
 	GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;

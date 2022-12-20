@@ -95,7 +95,11 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 	void EnableGlowMaterial();
-	void DisableGlowMaterial();
+
+	void UpdatePulse();
+
+	void ResetPulseTimer();
+	void StartPulseTimer();
 
 public:	
 	// Called every frame
@@ -207,6 +211,25 @@ private:
 	UMaterialInstance* MaterialInstance;
 
 	bool bCanChangeCustomDepth;
+	
+	// Dynamic material parameters의 커브
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	class UCurveVector* PulseCurve;
+
+	FTimerHandle PulseTimer;
+
+	// PulseTimer의 시간
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	float PulseCurveTime;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	float GlowAmount;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	float FresnelExponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	float FresnelReflectFraction;
 
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
@@ -224,4 +247,5 @@ public:
 
 	virtual void EnableCustomDepth();
 	virtual void DisableCustomDepth();
+	void DisableGlowMaterial();
 };
