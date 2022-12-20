@@ -90,6 +90,8 @@ protected:
 
 	void PlayPickupSound();
 
+	virtual void InitializeCustomDepth();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -200,4 +202,7 @@ public:
 
 	// ACharacter로부터 불러오기
 	void StartItemCurve(AShooterCharacter* Char);
+
+	virtual void EnableCustomDepth();
+	virtual void DisableCustomDepth();
 };
