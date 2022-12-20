@@ -51,6 +51,7 @@ void AWeapon::ThrowWeapon()
 		&AWeapon::StopFalling, 
 		ThrowWeaponTime);
 
+	EnableGlowMaterial();
 }
 
 void AWeapon::StopFalling()
