@@ -155,6 +155,7 @@ void AShooterCharacter::BeginPlay()
 
 	// 기본 무기를 불러오기 & 무기 장착하기
 	EquipWeapon(SpawnDefaultWeapon());
+	Inventory.Add(EquippedWeapon);
 	EquippedWeapon->DisableCustomDepth();
 	EquippedWeapon->DisableGlowMaterial();
 
@@ -1040,7 +1041,14 @@ void AShooterCharacter::GetPickupItem(AItem* Item)
 	auto Weapon = Cast<AWeapon>(Item);
 	if (Weapon)
 	{
-		SwapWeapon(Weapon);
+		if (Inventory.Num() < INVENTORY_CAPACITY)
+		{
+			Inventory.Add(Weapon);
+		}
+		else // 인벤토리가 꽉 찼을 때
+		{
+			SwapWeapon(Weapon);
+		}
 	}
 
 	auto Ammo = Cast<AAmmo>(Item);

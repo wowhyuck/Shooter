@@ -426,6 +426,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
 	float EquipSoundResetTime;
 
+	// 인벤토리 아이템의 배열
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+	TArray<AItem*> Inventory;
+
+	const int32 INVENTORY_CAPACITY{ 6 };
+
 public:
 	// CameraBoom 반환
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
