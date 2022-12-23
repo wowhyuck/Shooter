@@ -330,6 +330,7 @@ FVector AItem::GetInterpLocation()
 		break;
 
 	case EItemType::EIT_Weapon:
+		UE_LOG(LogTemp, Warning, TEXT("Come in WeaponInp"));
 		return Character->GetInterpLocation(0).SceneComponent->GetComponentLocation();
 		break;
 	}

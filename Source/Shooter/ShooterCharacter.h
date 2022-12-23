@@ -32,6 +32,7 @@ struct FInterpLocation
 	int32 ItemCount;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEquipItemDelegate, int32, CurrentSlotIndex, int32, NewSlotIndex);
 
 UCLASS()
 class SHOOTER_API AShooterCharacter : public ACharacter
@@ -431,6 +432,10 @@ private:
 	TArray<AItem*> Inventory;
 
 	const int32 INVENTORY_CAPACITY{ 6 };
+
+	// 획득했을 때, InventoryBar에 보낼 slot 정보들을 위한 delegate
+	UPROPERTY(BlueprintAssignable, Category = Delegates, meta = (AllowPrivateAccess = "true"))
+	FEquipItemDelegate EquipItemDelegate;
 
 public:
 	// CameraBoom 반환
