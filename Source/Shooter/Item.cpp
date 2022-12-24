@@ -190,6 +190,7 @@ void AItem::SetItemProperties(EItemState State)
 		ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		ItemMesh->SetSimulatePhysics(true);
 		ItemMesh->SetEnableGravity(true);
+		ItemMesh->SetVisibility(true);
 		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		ItemMesh->SetCollisionResponseToChannel(
 			ECollisionChannel::ECC_WorldStatic,
@@ -253,7 +254,6 @@ void AItem::FinishInterping()
 		// 현재 interp location struct에 item count 1 빼기
 		Character->IncreamentInterpLocItemCount(InterpLocIndex, -1);
 		Character->GetPickupItem(this);
-		SetItemState(EItemState::EIS_Pickup);
 	}
 	// 크기를 원래대로 돌리기
 	SetActorScale3D(FVector(1.f));
