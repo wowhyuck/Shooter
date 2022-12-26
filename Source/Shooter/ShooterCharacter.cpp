@@ -547,6 +547,17 @@ void AShooterCharacter::TraceForItems()
 				// 아이템의 Pickup Widget 보여주기
 				TraceHitItem->GetPickupWidget()->SetVisibility(true);
 				TraceHitItem->EnableCustomDepth();
+
+				if (Inventory.Num() >= INVENTORY_CAPACITY)
+				{
+					// 인벤토리 꽉 참
+					TraceHitItem->SetCharacterInventoryFull(true);
+				}
+				else
+				{
+					// 인벤토리 꽉 안 참
+					TraceHitItem->SetCharacterInventoryFull(false);
+				}
 			}
 
 			// 최근 프레임에 캐릭터가 아이템과 부딪힐 때
