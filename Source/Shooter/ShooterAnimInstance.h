@@ -108,6 +108,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouching", meta = (AllowPrivateAccess = "true"))
 	bool bCrouching;
 
+	// 장착할 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouching", meta = (AllowPrivateAccess = "true"))
+	bool bEquipping;
+
 	// 회전할 때와 조준할 때 recoil weight의 변화
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float RecoilWeight;
