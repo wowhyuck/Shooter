@@ -96,6 +96,7 @@ void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		if (ShooterCharacter)
 		{
 			ShooterCharacter->IncrementOverlappedItemCount(1);
+			ShooterCharacter->UnHighlightInventorySlot();
 		}
 	}
 }
@@ -255,6 +256,8 @@ void AItem::FinishInterping()
 		// 현재 interp location struct에 item count 1 빼기
 		Character->IncreamentInterpLocItemCount(InterpLocIndex, -1);
 		Character->GetPickupItem(this);
+
+		Character->UnHighlightInventorySlot();
 	}
 	// 크기를 원래대로 돌리기
 	SetActorScale3D(FVector(1.f));
