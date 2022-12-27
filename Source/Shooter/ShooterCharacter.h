@@ -110,7 +110,7 @@ protected:
 	class AWeapon* SpawnDefaultWeapon();
 
 	// 무기 장착 및 캐릭터 메시에 붙이기
-	void EquipWeapon(AWeapon* WeaponToEquip);
+	void EquipWeapon(AWeapon* WeaponToEquip, bool bSwapping = false);
 
 	// 무기를 떨어트려 놓기
 	void DropWeapon();
