@@ -393,6 +393,15 @@ void AItem::OnConstruction(const FTransform& Transform)
 		ItemMesh->SetMaterial(MaterialIndex, DynamicMaterialInstance);
 	}
 	EnableGlowMaterial();
+
+	// 아이템 등급 데이터 테이블에 있는 데이터 불러오기
+	// 아이템 등급 데이터 테이블의 경로
+	FString RarityTablePath(TEXT("DataTable'/Game/_Game/DataTable/ItemRarityDataTable.ItemRarityDataTable'"));
+	UDataTable* RarityTableObject = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *RarityTablePath));
+	if (RarityTableObject)
+	{
+
+	}
 }
 
 void AItem::EnableGlowMaterial()
