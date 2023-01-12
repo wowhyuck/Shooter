@@ -48,6 +48,12 @@ struct FWeaponDataTable : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* AmmoIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UMaterialInstance* MaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MaterialIndex;
 };
 
 /**
@@ -104,6 +110,8 @@ private:
 	// 무기 데이터 테이블
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DataTable", meta = (AllowPrivateAccess = "true"))
 	UDataTable* WeaponDataTable;
+
+	int32 PreviousMaterialIndex;
 
 public:
 	// 장착무기 던지기

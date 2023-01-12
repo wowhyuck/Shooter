@@ -319,6 +319,13 @@ public:
 	FORCEINLINE void SetItemName(FString Name) { ItemName = Name; }
 	FORCEINLINE void SetIconItem(UTexture2D* Icon) { IconItem = Icon; }
 	FORCEINLINE void SetIconAmmo(UTexture2D* Icon) { IconAmmo = Icon; }
+	FORCEINLINE void SetMaterialInstance(UMaterialInstance* Instace) { MaterialInstance = Instace; }
+	FORCEINLINE UMaterialInstance* GetMaterialInstance() const { return MaterialInstance; }
+	FORCEINLINE void SetDynamicMaterialInstance(UMaterialInstanceDynamic* Instace) { DynamicMaterialInstance = Instace; }
+	FORCEINLINE UMaterialInstanceDynamic* GetDynamicMaterialInstance() const { return DynamicMaterialInstance; }
+	FORCEINLINE FLinearColor GetGlowColor() const { return GlowColor; }
+	FORCEINLINE int32 GetMaterialIndex() const { return MaterialIndex; }
+	FORCEINLINE void SetMaterialIndex(int32 Index) { MaterialIndex = Index; }
 
 	// ACharacter로부터 불러오기
 	void StartItemCurve(AShooterCharacter* Char, bool bForcePlaySound = false);
