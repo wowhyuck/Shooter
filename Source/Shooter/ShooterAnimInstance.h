@@ -124,4 +124,8 @@ private:
 	// 현재 장착 중인 무기의 타입
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	EWeaponType EqiuppedWeaponType;
+
+	// 장전/장착 중이 아닐 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	bool bShouldUseFABRIK;
 };
