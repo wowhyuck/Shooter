@@ -5,6 +5,8 @@
 #include "ShooterCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Weapon.h"
+#include "WeaponType.h"
 
 
 UShooterAnimInstance::UShooterAnimInstance() :
@@ -90,6 +92,12 @@ void UShooterAnimInstance::UpdateAnimationProperties(float deltaTime)
 		else
 		{
 			OffsetState = EOffsetState::EOS_Hip;
+		}
+
+		// 캐릭터가 장착한 무기 확인하기
+		if (ShooterCharacter->GetEquippedWeapon())
+		{
+			EqiuppedWeaponType = ShooterCharacter->GetEquippedWeapon()->GetWeaponType();
 		}
 	}
 
