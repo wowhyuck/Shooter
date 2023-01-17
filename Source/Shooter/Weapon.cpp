@@ -98,6 +98,11 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 		SetClipBoneName(WeaponDataRow->ClipBoneName);
 		SetReloadMontageSection(WeaponDataRow->ReloadMontageSection);
 		GetItemMesh()->SetAnimInstanceClass(WeaponDataRow->AnimBP);
+		CrosshairsMiddle = WeaponDataRow->CrosshairsMiddle;
+		CrosshairsRight = WeaponDataRow->CrosshairsRight;
+		CrosshairsLeft = WeaponDataRow->CrosshairsLeft;
+		CrosshairsTop = WeaponDataRow->CrosshairsTop;
+		CrosshairsBottom = WeaponDataRow->CrosshairsBottom;
 	}
 
 	if (GetMaterialInstance())
