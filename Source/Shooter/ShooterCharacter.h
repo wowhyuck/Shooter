@@ -229,14 +229,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseAimingLookUpRate;
 
-	// 총소리 (랜덤)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	class USoundCue* FireSound;
-
-	// 총구
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	class UParticleSystem* MuzzleFlash;
-
 	// 무기 사용 몽타주
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* HipFireMontage;
@@ -298,9 +290,6 @@ private:
 
 	// 발사할 수 있을 때 true, 타이머동안 기다릴 때 false
 	bool bShouldFire;
-
-	// 연사 수치
-	float AutomaticFireRate;
 
 	// 발사 간의 타이머 세팅
 	FTimerHandle AutoFireTimer;
