@@ -105,6 +105,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	void FinishMovingSlide();
+	void UpdateSlideDisplacement();
+
 private:
 	FTimerHandle ThrowWeaponTimer;
 	float ThrowWeaponTime;
@@ -183,6 +186,29 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pistol", meta = (AllowPrivateAccess = "true"))
 	UCurveFloat* SlideDisplacementCurve;
 
+	// SlideDisplacement의 업데이트를 위한 Timer Handle
+	FTimerHandle SlideTimer;
+
+	// 권총 발사 중에 slide가 분리되는 중의 시간
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pistol", meta = (AllowPrivateAccess = "true"))
+	float SlideDisplacementTime;
+
+	// slide가 움직일 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pistol", meta = (AllowPrivateAccess = "true"))
+	bool bMovingSlide;
+
+	// slide가 이동할 수 있는 최대 거리
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pistol", meta = (AllowPrivateAccess = "true"))
+	float MaxSlideDisplacement;
+
+	// 권총 반동 최대 회전
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pistol", meta = (AllowPrivateAccess = "true"))
+	float MaxRecoilRotation;
+
+	// 권총 발사 중 권총 회전량
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pistol", meta = (AllowPrivateAccess = "true"))
+	float RecoilRotation;
+
 public:
 	// 장착무기 던지기
 	void ThrowWeapon();
@@ -202,6 +228,8 @@ public:
 	FORCEINLINE float GetAutoFireRate() const { return AutoFireRate; }
 	FORCEINLINE UParticleSystem* GetMuzzleFlash() const { return MuzzleFlash; }
 	FORCEINLINE USoundCue* GetFireSound() const { return FireSound; }
+
+	void StartSlideTimer();
 
 	void ReloadAmmo(int32 Amount);
 

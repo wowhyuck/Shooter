@@ -251,6 +251,12 @@ void AShooterCharacter::FireWeapon()
 		EquippedWeapon->DecrementAmmo();
 
 		StartFireTimer();
+
+		if (EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Pistol)
+		{
+			// moving slide timer 시작
+			EquippedWeapon->StartSlideTimer();
+		}
 	}
 }
 
