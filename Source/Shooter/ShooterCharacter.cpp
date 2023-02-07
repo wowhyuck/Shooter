@@ -481,7 +481,7 @@ void AShooterCharacter::AutoFireReset()
 
 	if (WeaponHasAmmo())
 	{
-		if (bFireButtonPressed)
+		if (bFireButtonPressed && EquippedWeapon->GetAutomatic())
 		{
 			FireWeapon();
 		}
