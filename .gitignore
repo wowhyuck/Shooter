@@ -508,5 +508,6 @@ FodyWeavers.xsd
 Content/ParagonLtBelica/
 Content/AnimStarterPack/
 Content/FPS_Weapon_Bundle/
+Content/A_Surface_Footstep/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++,unrealengine
