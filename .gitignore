@@ -509,5 +509,9 @@ Content/ParagonLtBelica/
 Content/AnimStarterPack/
 Content/FPS_Weapon_Bundle/
 Content/A_Surface_Footstep/
+Content/KiteDemo/
+Content/Lighting/
+Content/ParagonProps/
+Content/SampleMap/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++,unrealengine
