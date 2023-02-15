@@ -985,10 +985,10 @@ void AShooterCharacter::FiveKeyPressed()
 }
 
 void AShooterCharacter::ExchangeInventoryItems(int32 CurrentItemIndex, int32 NewItemIndex)
-{	
-	const bool bCanExchangeItems = 
-		(CurrentItemIndex != NewItemIndex) && 
-		(NewItemIndex < Inventory.Num()) && 
+{
+	const bool bCanExchangeItems =
+		(CurrentItemIndex != NewItemIndex) &&
+		(NewItemIndex < Inventory.Num()) &&
 		(CombatState == ECombatState::ECS_Unoccupied || CombatState == ECombatState::ECS_Equipping);
 	if (bCanExchangeItems)
 	{
@@ -1037,6 +1037,23 @@ void AShooterCharacter::HighlightInventorySlot()
 	const int32 EmptySlot{ GetEmptyInventorySlot() };
 	HighlightIconDelegate.Broadcast(EmptySlot, true);
 	HighlightedSlot = EmptySlot;
+}
+
+void AShooterCharacter::Footstep()
+{
+	FHitResult HitResult;
+	const FVector Start{ GetActorLocation() };
+	const FVector End{ Start + FVector(0.f, 0.f, -400.f) };
+	FCollisionQueryParams QueryParams;
+	QueryParams.bReturnPhysicalMaterial = true;
+
+	GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		ECollisionChannel::ECC_Visibility,
+		QueryParams);
+	UE_LOG(LogTemp, Warning, TEXT("Hit Actor : %s"), *HitResult.Actor->GetName());
 }
 
 void AShooterCharacter::UnHighlightInventorySlot()
