@@ -17,6 +17,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Ammo.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
+#include "Shooter.h"
 
 
 // Sets default values
@@ -1053,7 +1055,12 @@ void AShooterCharacter::Footstep()
 		End,
 		ECollisionChannel::ECC_Visibility,
 		QueryParams);
-	UE_LOG(LogTemp, Warning, TEXT("Hit Actor : %s"), *HitResult.Actor->GetName());
+	
+	auto HitSurface = HitResult.PhysMaterial->SurfaceType;
+	if (HitSurface == EPS_Grass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Grass surface type"));
+	}
 }
 
 void AShooterCharacter::UnHighlightInventorySlot()
