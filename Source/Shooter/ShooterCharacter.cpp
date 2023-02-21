@@ -9,7 +9,7 @@
 #include "Sound/SoundCue.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "DrawDebugHelpers.h"
-#include "particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Item.h"
 #include "Components/WidgetComponent.h"
 #include "Weapon.h"
@@ -19,6 +19,7 @@
 #include "Ammo.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "Shooter.h"
+#include "BulletHitInterface.h"
 
 
 // Sets default values
@@ -264,8 +265,10 @@ void AShooterCharacter::FireWeapon()
 
 bool AShooterCharacter::GetBeamEndLocation(
 	const FVector& MuzzleSocketLocation,
-	FVector& OutBeamLocation)
+	FHitResult& OutHitResult)
 {
+	FVector OutBeamLocation;
+
 	// Crosshair trace hit 확인하기
 	FHitResult CrosshairHitResult;
 	bool bCrosshairHit = TraceUnderCrosshairs(CrosshairHitResult, OutBeamLocation);
@@ -281,23 +284,22 @@ bool AShooterCharacter::GetBeamEndLocation(
 	}
 
 	// 두번째 trace, 총구로부터 trace하기
-	FHitResult WeaponTraceHit;
 	const FVector WeaponTraceStart{ MuzzleSocketLocation };
 	const FVector StartToEnd{ OutBeamLocation - MuzzleSocketLocation };
 	const FVector WeaponTraceEnd{ MuzzleSocketLocation + StartToEnd * 1.25f };
 	GetWorld()->LineTraceSingleByChannel(
-		WeaponTraceHit,
+		OutHitResult,
 		WeaponTraceStart,
 		WeaponTraceEnd,
 		ECollisionChannel::ECC_Visibility);
 
-	if (WeaponTraceHit.bBlockingHit)		// 총알과 BeamEndPoint 사이에 object가 있나?
+	if (!OutHitResult.bBlockingHit)		// 총알과 BeamEndPoint 사이에 object가 있나?
 	{
-		OutBeamLocation = WeaponTraceHit.Location;
-		return true;
+		OutHitResult.Location = OutBeamLocation;
+		return false;
 	}
 
-	return false;
+	return true;
 }
 
 void AShooterCharacter::AimingButtonPressed()
@@ -734,17 +736,30 @@ void AShooterCharacter::SendBullet()
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EquippedWeapon->GetMuzzleFlash(), SocketTransform);
 		}
 
-		FVector BeamEnd;
-		bool bBeamEnd = GetBeamEndLocation(SocketTransform.GetLocation(), BeamEnd);
+		FHitResult BeamHitResult;
+		bool bBeamEnd = GetBeamEndLocation(SocketTransform.GetLocation(), BeamHitResult);
 
 		if (bBeamEnd)
 		{
-			if (ImpactParticles)
+			// BulletHitInterface 작동 체크
+			if (BeamHitResult.Actor.IsValid())
 			{
-				UGameplayStatics::SpawnEmitterAtLocation(
-					GetWorld(),
-					ImpactParticles,
-					BeamEnd);
+				IBulletHitInterface* BulletHitInterface = Cast<IBulletHitInterface>(BeamHitResult.Actor.Get());
+				if (BulletHitInterface)
+				{
+					BulletHitInterface->BulletHit_Implementation(BeamHitResult);
+				}
+			}
+			else
+			{
+				// 기본 particle 불러오기
+				if (ImpactParticles)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(
+						GetWorld(),
+						ImpactParticles,
+						BeamHitResult.Location);
+				}
 			}
 
 			UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
@@ -754,7 +769,7 @@ void AShooterCharacter::SendBullet()
 
 			if (Beam)
 			{
-				Beam->SetVectorParameter(FName("Target"), BeamEnd);
+				Beam->SetVectorParameter(FName("Target"), BeamHitResult.Location);
 			}
 		}
 	}

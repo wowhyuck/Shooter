@@ -74,7 +74,7 @@ protected:
 	// FireButton이 눌렸을 때 호출
 	void FireWeapon();
 
-	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FHitResult& OutHitResult);
 
 	// 줌인 버튼에 따라 (bAiming이 true 또는 false) 함수 호출
 	void AimingButtonPressed();
