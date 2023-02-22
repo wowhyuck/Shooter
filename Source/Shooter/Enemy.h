@@ -27,6 +27,8 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void HideHealthBar();
 
+	void Die();
+
 private:
 	// 총에 맞았을 때 생기는 particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
