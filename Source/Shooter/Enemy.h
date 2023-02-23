@@ -31,6 +31,8 @@ protected:
 
 	void PlayHitMontage(FName Section, float PlayRate = 1.0f);
 
+	void ResetHitReactTimer();
+
 private:
 	// 총에 맞았을 때 생기는 particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
@@ -61,6 +63,16 @@ private:
 	// 피격, 사망 애니메이션이 포함된 Montage
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* HitMontage;
+
+	FTimerHandle HitReactTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float HitReactTimeMin;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float HitReactTimeMax;
+
+	bool bCanHitReact;
 
 public:	
 	// Called every frame
