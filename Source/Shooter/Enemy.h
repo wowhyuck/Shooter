@@ -35,6 +35,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void StoreHitNumber(UUserWidget* HitNumber, FVector Location);
+	
+	UFUNCTION()
+	void DestroyHitNumber(UUserWidget* HitNumber);
 
 private:
 	// 총에 맞았을 때 생기는 particle
@@ -80,6 +83,10 @@ private:
 	// 데미지 widget과 위치를 저장하는 맵
 	UPROPERTY(VisibleAnywhere, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	TMap<UUserWidget*, FVector> HitNumbers;
+
+	// 데미지가 화면에서 사라지기 전 시간
+	UPROPERTY(EditAnywhere, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float HitNumberDestroyTime;
 
 public:	
 	// Called every frame
