@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -39,34 +39,36 @@ protected:
 	UFUNCTION()
 	void DestroyHitNumber(UUserWidget* HitNumber);
 
+	void UpdateHitNumbers();
+
 private:
-	// ÃÑ¿¡ ¸Â¾ÒÀ» ¶§ »ı±â´Â particle
+	// ì´ì— ë§ì•˜ì„ ë•Œ ìƒê¸°ëŠ” particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	class UParticleSystem* ImpactParticles;
 
-	// ÃÑ¿¡ ¸Â¾ÒÀ» ¶§ Àç»ıµÇ´Â sound
+	// ì´ì— ë§ì•˜ì„ ë•Œ ì¬ìƒë˜ëŠ” sound
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	class USoundCue* ImpactSound;
 
-	// ÇöÀç Ã¼·Â
+	// í˜„ì¬ ì²´ë ¥
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float Health;
 
-	// ÃÖ´ë Ã¼·Â
+	// ìµœëŒ€ ì²´ë ¥
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float MaxHealth;
 
-	// ¸Ó¸® ÀÌ¸§
+	// ë¨¸ë¦¬ ì´ë¦„
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	FString HeadBone;
 
-	// Ã¼·Â¹Ù ¶ç¿ì´Â ½Ã°£
+	// ì²´ë ¥ë°” ë„ìš°ëŠ” ì‹œê°„
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float HealthBarDisplayTime;
 
 	FTimerHandle HealthBarTimer;
 
-	// ÇÇ°İ, »ç¸Á ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ Æ÷ÇÔµÈ Montage
+	// í”¼ê²©, ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ì´ í¬í•¨ëœ Montage
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* HitMontage;
 
@@ -80,11 +82,11 @@ private:
 
 	bool bCanHitReact;
 
-	// µ¥¹ÌÁö widget°ú À§Ä¡¸¦ ÀúÀåÇÏ´Â ¸Ê
+	// ë°ë¯¸ì§€ widgetê³¼ ìœ„ì¹˜ë¥¼ ì €ì¥í•˜ëŠ” ë§µ
 	UPROPERTY(VisibleAnywhere, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	TMap<UUserWidget*, FVector> HitNumbers;
 
-	// µ¥¹ÌÁö°¡ È­¸é¿¡¼­ »ç¶óÁö±â Àü ½Ã°£
+	// ë°ë¯¸ì§€ê°€ í™”ë©´ì—ì„œ ì‚¬ë¼ì§€ê¸° ì „ ì‹œê°„
 	UPROPERTY(EditAnywhere, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float HitNumberDestroyTime;
 

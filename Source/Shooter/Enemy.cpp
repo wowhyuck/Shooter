@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Enemy.h"
@@ -92,11 +92,29 @@ void AEnemy::DestroyHitNumber(UUserWidget* HitNumber)
 	HitNumber->RemoveFromParent();
 }
 
+void AEnemy::UpdateHitNumbers()
+{
+	for (auto& HitPair : HitNumbers)
+	{
+		UUserWidget* HitNumber{ HitPair.Key };
+		const FVector Location{ HitPair.Value };
+		FVector2D ScreenPosition;
+
+		UGameplayStatics::ProjectWorldToScreen(
+			GetWorld()->GetFirstPlayerController(),
+			Location,
+			ScreenPosition);
+
+		HitNumber->SetPositionInViewport(ScreenPosition);
+	}
+}
+
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateHitNumbers();
 }
 
 // Called to bind functionality to input
