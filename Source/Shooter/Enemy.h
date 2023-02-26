@@ -94,6 +94,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = BehaviorTree, meta = (AllowPrivateAccess = "true"))
 	class UBehaviorTree* BehaviorTree;
 
+	// 몬스터가 향할 포인터
+	UPROPERTY(EditAnywhere, Category = BehaviorTree, meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
+	FVector PatrolPoint;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
