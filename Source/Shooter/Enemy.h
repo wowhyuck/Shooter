@@ -98,6 +98,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = BehaviorTree, meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
 	FVector PatrolPoint;
 
+	class AEnemyController* EnemyController;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
