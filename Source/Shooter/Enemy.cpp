@@ -177,6 +177,16 @@ void AEnemy::AgroSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	}
 }
 
+void AEnemy::SetStunned(bool Stunned)
+{
+	bStunned = Stunned;
+
+	if (EnemyController)
+	{
+		EnemyController->GetBlackboardComponent()->SetValueAsBool(TEXT("Stunned"), Stunned);
+	}
+}
+
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
@@ -210,10 +220,8 @@ void AEnemy::BulletHit_Implementation(FHitResult HitResult)
 	{
 		// 적에게 스턴
 		PlayHitMontage(FName("HitReactFront"));
-		bStunned = true;
+		SetStunned(true);
 	}
-
-	PlayHitMontage(FName("HitReactFront"));
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
