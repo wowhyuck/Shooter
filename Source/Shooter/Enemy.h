@@ -41,6 +41,16 @@ protected:
 
 	void UpdateHitNumbers();
 
+	// Agro Sphere에 오버랩 됐을 때 불러오기
+	UFUNCTION()
+	void AgroSphereOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
 private:
 	// 총에 맞았을 때 생기는 particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
@@ -103,6 +113,10 @@ private:
 	FVector PatrolPoint2;
 
 	class AEnemyController* EnemyController;
+
+	// 원 안에 들어올 때 몬스터가 적의를 가짐
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* AgroSphere;
 
 public:	
 	// Called every frame
