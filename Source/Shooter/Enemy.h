@@ -118,6 +118,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* AgroSphere;
 
+	// 피격 애니메이션이 재생될 때 true
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	bool bStunned;
+
+	// 스턴될 확률. 0 : 스턴 안 됨, 1 : 100% 스턴 됨
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float StunChance;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
