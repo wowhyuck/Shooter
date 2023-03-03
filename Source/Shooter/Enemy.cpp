@@ -12,7 +12,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/SphereComponent.h"
 #include "ShooterCharacter.h"
-
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemy::AEnemy() :
@@ -51,7 +51,18 @@ void AEnemy::BeginPlay()
 	CombatRangeSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::CombatRangeOverlap);
 	CombatRangeSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemy::CombatRangeEndOverlap);
 
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(
+		ECollisionChannel::ECC_Visibility, 
+		ECollisionResponse::ECR_Block);
+
+	// 메시와 캡슐에 대해서 카메라 무시
+	GetMesh()->SetCollisionResponseToChannel(
+		ECollisionChannel::ECC_Camera, 
+		ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(
+		ECollisionChannel::ECC_Camera,
+		ECollisionResponse::ECR_Ignore);
+
 
 	// AI Controller 얻기
 	EnemyController = Cast<AEnemyController>(GetController());
