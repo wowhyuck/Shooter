@@ -73,6 +73,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void PlayAttackMontage(FName Section, float PlayRate);
 
+	UFUNCTION(BlueprintPure)
+	FName GetAttackSectionName();
+
 private:
 	// 총에 맞았을 때 생기는 particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
