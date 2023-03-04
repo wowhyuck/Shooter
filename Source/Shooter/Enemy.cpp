@@ -13,6 +13,7 @@
 #include "Components/SphereComponent.h"
 #include "ShooterCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 AEnemy::AEnemy() :
@@ -40,6 +41,12 @@ AEnemy::AEnemy() :
 	// Combat Range Sphere 만들기
 	CombatRangeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CombatRangeSphere"));
 	CombatRangeSphere->SetupAttachment(GetRootComponent());
+
+	// 왼쪽과 오른쪽 무기의 Collision Box 만들기
+	LeftWeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Left Weapon Box"));
+	LeftWeaponCollision->SetupAttachment(GetMesh(), FName("LeftWeaponBone"));
+	RightWeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Right Weapon Box"));
+	RightWeaponCollision->SetupAttachment(GetMesh(), FName("RightWeaponBone"));
 }
 
 // Called when the game starts or when spawned
@@ -50,6 +57,25 @@ void AEnemy::BeginPlay()
 	AgroSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AgroSphereOverlap);
 	CombatRangeSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::CombatRangeOverlap);
 	CombatRangeSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemy::CombatRangeEndOverlap);
+
+	// Weapon Boxes의 오버랩 이벤트가 발생되는 함수들 바인딩하기
+	LeftWeaponCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnLeftWeaponOverlap);
+	RightWeaponCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnRightWeaponOverlap);
+
+	// Weapon Boxes의 Collision preset 세팅하기
+	LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LeftWeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	LeftWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	LeftWeaponCollision->SetCollisionResponseToChannel(
+		ECollisionChannel::ECC_Pawn, 
+		ECollisionResponse::ECR_Overlap);
+	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RightWeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	RightWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	RightWeaponCollision->SetCollisionResponseToChannel(
+		ECollisionChannel::ECC_Pawn,
+		ECollisionResponse::ECR_Overlap);
+
 
 	GetMesh()->SetCollisionResponseToChannel(
 		ECollisionChannel::ECC_Visibility, 
@@ -266,6 +292,14 @@ FName AEnemy::GetAttackSectionName()
 		break;
 	}
 	return SectionName;
+}
+
+void AEnemy::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
+
+void AEnemy::OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 }
 
 // Called every frame
