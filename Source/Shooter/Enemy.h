@@ -94,6 +94,18 @@ protected:
 			bool bFromSweep,
 			const FHitResult& SweepResult);
 
+	// Weapon Box의 충돌 활성화/비활성화
+	UFUNCTION(BlueprintCallable)
+	void ActivateLeftWeapon();
+	UFUNCTION(BlueprintCallable)
+	void DeactivateLeftWeapon();
+	UFUNCTION(BlueprintCallable)
+	void ActivateRightWeapon();
+	UFUNCTION(BlueprintCallable)
+	void DeactivateRightWeapon();
+
+	void DoDamage(AActor* Victim);
+
 private:
 	// 총에 맞았을 때 생기는 particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
@@ -195,15 +207,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* RightWeaponCollision;
 
-	// Weapon Box의 충돌 활성화/비활성화
-	UFUNCTION(BlueprintCallable)
-	void ActivateLeftWeapon();
-	UFUNCTION(BlueprintCallable)
-	void DeactivateLeftWeapon();
-	UFUNCTION(BlueprintCallable)
-	void ActivateRightWeapon();
-	UFUNCTION(BlueprintCallable)
-	void DeactivateRightWeapon();
+	// 기본 데미지
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float BaseDamage;
 
 public:	
 	// Called every frame
