@@ -107,6 +107,9 @@ protected:
 	void DoDamage(class AShooterCharacter* Victim);
 	void SpawnBlood(AShooterCharacter* Victim, FName SocketName);
 
+	// 캐릭터에게 스턴 시도
+	void StunCharacter(AShooterCharacter* Victim);
+
 private:
 	// 총에 맞았을 때 생기는 particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))

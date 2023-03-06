@@ -306,6 +306,7 @@ void AEnemy::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	{
 		DoDamage(Character);
 		SpawnBlood(Character, LeftWeaponSocket);
+		StunCharacter(Character);
 	}
 }
 
@@ -316,6 +317,7 @@ void AEnemy::OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	{
 		DoDamage(Character);
 		SpawnBlood(Character, RightWeaponSocket);
+		StunCharacter(Character);
 	}
 }
 
@@ -375,6 +377,18 @@ void AEnemy::SpawnBlood(AShooterCharacter* Victim, FName SocketName)
 		}
 	}
 
+}
+
+void AEnemy::StunCharacter(AShooterCharacter* Victim)
+{
+	if (Victim)
+	{
+		const float Stun{ FMath::FRandRange(0.f, 1.1) };
+		if (Stun <= Victim->GetStunChance())
+		{
+			Victim->Stun();
+		}
+	}
 }
 
 // Called every frame

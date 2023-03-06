@@ -485,6 +485,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* BloodParticles;
 
+	// 스턴일 때 Hit React Montage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* HitReactMontage;
+
+	// 피격 시 스턴될 확률
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float StunChance;
+
 public:
 	// CameraBoom 반환
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -528,4 +536,7 @@ public:
 	FORCEINLINE AWeapon* GetEquippedWeapon() const { return EquippedWeapon; }
 	FORCEINLINE USoundCue* GetMeleeImpactSound() const { return MeleeImpactSound; }
 	FORCEINLINE UParticleSystem* GetBloodParticles() const { return BloodParticles; }
+
+	void Stun();
+	FORCEINLINE float GetStunChance() const { return StunChance; }
 };
