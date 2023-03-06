@@ -191,6 +191,11 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void EndStun();
 
+	void Die();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishDeath();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -492,6 +497,10 @@ private:
 	// 피격 시 스턴될 확률
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float StunChance;
+
+	// 캐릭터가 죽을 때 Death Montage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* DeathMontage;
 
 public:
 	// CameraBoom 반환
