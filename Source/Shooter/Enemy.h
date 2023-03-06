@@ -115,6 +115,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void FinishDeath();
 
+	UFUNCTION(BlueprintCallable)
+	void DestroyEnemy();
+
 private:
 	// 총에 맞았을 때 생기는 particle
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
@@ -241,6 +244,12 @@ private:
 	UAnimMontage* DeathMontage;
 
 	bool bDying;
+
+	FTimerHandle DeathTimer;
+
+	// 죽은 후 Destroy 전까지 시간 
+	UPROPERTY(EditAnywhere, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float DeathTime;
 
 public:	
 	// Called every frame
