@@ -128,7 +128,7 @@ private:
 	class USoundCue* ImpactSound;
 
 	// 현재 체력
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float Health;
 
 	// 최대 체력
