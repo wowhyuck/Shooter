@@ -64,6 +64,7 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 	
 	AgroSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AgroSphereOverlap);
+	
 	CombatRangeSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::CombatRangeOverlap);
 	CombatRangeSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemy::CombatRangeEndOverlap);
 
@@ -105,43 +106,10 @@ void AEnemy::BeginPlay()
 	if (EnemyController)
 	{
 		EnemyController->GetBlackboardComponent()->SetValueAsBool(FName("CanAttack"), true);
-	}
 
-	const FVector WorldPatrolPoint = UKismetMathLibrary::TransformLocation(
-		GetActorTransform(), 
-		PatrolPoint);
-
-	const FVector WorldPatrolPoint2 = UKismetMathLibrary::TransformLocation(
-		GetActorTransform(),
-		PatrolPoint2);
-
-	DrawDebugSphere(
-		GetWorld(),
-		WorldPatrolPoint,
-		25.f,
-		12,
-		FColor::Red,
-		true
-	);
-
-	DrawDebugSphere(
-		GetWorld(),
-		WorldPatrolPoint2,
-		25.f,
-		12,
-		FColor::Red,
-		true
-	);
-
-	if (EnemyController)
-	{
-		EnemyController->GetBlackboardComponent()->SetValueAsVector(
-			TEXT("PatrolPoint"),
-			WorldPatrolPoint);
-
-		EnemyController->GetBlackboardComponent()->SetValueAsVector(
-			TEXT("PatrolPoint2"),
-			WorldPatrolPoint2);
+		// Taget에 플레이어 값 설정하기
+		auto Character = Cast<AShooterCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+		EnemyController->GetBlackboardComponent()->SetValueAsObject(FName("Target"), Character);
 
 		EnemyController->RunBehaviorTree(BehaviorTree);
 	}

@@ -171,14 +171,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = BehaviorTree, meta = (AllowPrivateAccess = "true"))
 	class UBehaviorTree* BehaviorTree;
 
-	// 몬스터가 향할 포인터
-	UPROPERTY(EditAnywhere, Category = BehaviorTree, meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
-	FVector PatrolPoint;
-
-	// 몬스터가 향할 두번째 포인터
-	UPROPERTY(EditAnywhere, Category = BehaviorTree, meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
-	FVector PatrolPoint2;
-
 	class AEnemyController* EnemyController;
 
 	// 원 안에 들어올 때 몬스터가 적의를 가짐
