@@ -23,6 +23,7 @@
 #include "Enemy.h"
 #include "EnemyController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BuffComponent.h"
 
 
 // Sets default values
@@ -152,6 +153,7 @@ AShooterCharacter::AShooterCharacter() :
 	InterpComp6 = CreateDefaultSubobject<USceneComponent>(TEXT("Interpolation Component 6"));
 	InterpComp6->SetupAttachment(GetFollowCamera());
 
+	Buff = CreateDefaultSubobject<UBuffComponent>(TEXT("BuffComponent"));
 }
 
 	float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -1164,6 +1166,16 @@ void AShooterCharacter::FinishDeath()
 	if (PC)
 	{
 		DisableInput(PC);
+	}
+}
+
+void AShooterCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (Buff)
+	{
+		Buff->Character = this;
 	}
 }
 

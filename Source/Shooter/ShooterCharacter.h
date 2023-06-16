@@ -196,6 +196,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void FinishDeath();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void PostInitializeComponents();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -505,6 +508,9 @@ private:
 	// 캐릭터가 죽을 때 true
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	bool bDead;
+
+	UPROPERTY(VisibleAnywhere)
+	class UBuffComponent* Buff;
 
 public:
 	// CameraBoom 반환
