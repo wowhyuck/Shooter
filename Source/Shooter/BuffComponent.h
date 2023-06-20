@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -13,6 +13,7 @@ class SHOOTER_API UBuffComponent : public UActorComponent
 public:	
 	UBuffComponent();
 	friend class AShooterCharacter;
+	void Heal(float HealAmount);
 
 protected:
 	virtual void BeginPlay() override;

@@ -558,4 +558,13 @@ public:
 
 	void Stun();
 	FORCEINLINE float GetStunChance() const { return StunChance; }
+	FORCEINLINE UBuffComponent* GetBuff() const { return Buff; }
+
+	// 캐릭터 생사
+	FORCEINLINE bool GetDead() const { return bDead; }
+
+	// 캐릭터 체력
+	FORCEINLINE float GetHealth() const { return Health; }
+	FORCEINLINE void SetHealth(float Amount) { Health = Amount; }
+	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 };
