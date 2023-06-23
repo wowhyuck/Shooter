@@ -100,7 +100,11 @@ AShooterCharacter::AShooterCharacter() :
 	Health(100.f),
 	MaxHealth(100.f),
 	StunChance(.25f),
-	bDead(false)
+	bDead(false),
+
+	// 캐릭터 골드
+	Gold(0),
+	MaxGold(9990)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;

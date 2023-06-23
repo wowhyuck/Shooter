@@ -512,6 +512,14 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UBuffComponent* Buff;
 
+	// 캐릭터 골드 보유량
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 Gold;
+
+	// 캐릭터 골드 최대 보유량
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 MaxGold;
+
 public:
 	// CameraBoom 반환
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -567,4 +575,9 @@ public:
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE void SetHealth(float Amount) { Health = Amount; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+
+	// 캐릭터 골드
+	FORCEINLINE int32 GetGold() const { return Gold; }
+	FORCEINLINE void SetGold(int32 Amount) { Gold = Amount; }
+	FORCEINLINE int32 GetMaxGold() const { return MaxGold; }
 };

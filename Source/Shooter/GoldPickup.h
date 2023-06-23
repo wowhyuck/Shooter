@@ -4,28 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "Pickup.h"
-#include "HealthPickup.generated.h"
+#include "GoldPickup.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SHOOTER_API AHealthPickup : public APickup
+class SHOOTER_API AGoldPickup : public APickup
 {
 	GENERATED_BODY()
 	
 public:
-	AHealthPickup();
+	AGoldPickup();
 	virtual void Destroyed() override;
 
 protected:
 	virtual void OnSphereOverlap(
-			UPrimitiveComponent* OverlappedComponent,
-			AActor* OtherActor,
-			UPrimitiveComponent* OtherComp,
-			int32 OtherBodyIndex,
-			bool bFromSweep,
-			const FHitResult& SweepResult);
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -35,5 +35,5 @@ private:
 	class UNiagaraSystem* PickupEffect;
 
 	UPROPERTY(EditAnywhere)
-	float HealAmount;
+	int32 GoldAmount;
 };
