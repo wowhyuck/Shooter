@@ -507,16 +507,10 @@ FodyWeavers.xsd
 # List of files ignored
 Content/ParagonLtBelica/
 Content/AnimStarterPack/
-Content/FPS_Weapon_Bundle/
 Content/A_Surface_Footstep/
-Content/KiteDemo/
 Content/Lighting/
 Content/ParagonProps/
-Content/SampleMap/
-Content/ParagonTwinblast/
 Content/ParagonGrux/
-Content/IndustryPropsPack6/
-Content/ParagonKhaimera/
 Content/SuperGrid/
 Content/sA_PickupSet_1/
 Content/InterfaceAndItemSounds/

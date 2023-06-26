@@ -22,9 +22,6 @@ void AHealthPickup::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 	AShooterCharacter* Character = Cast<AShooterCharacter>(OtherActor);
 
-	// 플레이어가 최대 체력일 때 오버랩 작동하지 않기
-	if (Character->GetHealth() >= Character->GetMaxHealth()) return;
-
 	Super::OnSphereOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
 	if (Character)
