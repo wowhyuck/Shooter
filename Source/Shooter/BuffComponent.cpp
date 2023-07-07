@@ -3,6 +3,7 @@
 
 #include "BuffComponent.h"
 #include "ShooterCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 UBuffComponent::UBuffComponent()
@@ -26,6 +27,41 @@ void UBuffComponent::Heal(float HealAmount)
 void UBuffComponent::TakeGold(int32 GoldAmount)
 {
 	Character->SetGold(FMath::Clamp(Character->GetGold() + GoldAmount, 0, Character->GetMaxGold()));
+}
+
+void UBuffComponent::SetInitialSpeed(float BaseSpeed, float CrouchSpeed)
+{
+	InitialBaseSpeed = BaseSpeed;
+	InitialCrouchSpeed = CrouchSpeed;
+}
+
+void UBuffComponent::BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float BuffTime)
+{
+	if (Character == nullptr) return;
+
+	Character->GetWorldTimerManager().SetTimer(
+		SpeedBuffTimer,
+		this,
+		&UBuffComponent::ResetSpeed,
+		BuffTime);
+
+	if (Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->MaxWalkSpeed = BuffBaseSpeed;
+		Character->GetCharacterMovement()->MaxWalkSpeedCrouched = BuffCrouchSpeed;
+	}
+}
+
+void UBuffComponent::ResetSpeed()
+{
+	if (Character == nullptr || Character->GetCharacterMovement() == nullptr) return;
+
+	Character->GetCharacterMovement()->MaxWalkSpeed = InitialBaseSpeed;
+	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = InitialCrouchSpeed;
+}
+
+void UBuffComponent::ShieldBuff()
+{
 }
 
 void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

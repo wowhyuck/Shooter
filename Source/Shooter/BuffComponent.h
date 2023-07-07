@@ -15,6 +15,9 @@ public:
 	friend class AShooterCharacter;
 	void Heal(float HealAmount);
 	void TakeGold(int32 GoldAmount);
+	void BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float BuffTime);
+	void SetInitialSpeed(float BaseSpeed, float CrouchSpeed);
+	void ShieldBuff();
 
 protected:
 	virtual void BeginPlay() override;
@@ -23,8 +26,12 @@ private:
 	UPROPERTY()
 	class AShooterCharacter* Character;
 
+	// Speed Buff
+	FTimerHandle SpeedBuffTimer;
+	void ResetSpeed();
+	float InitialBaseSpeed;
+	float InitialCrouchSpeed;
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };

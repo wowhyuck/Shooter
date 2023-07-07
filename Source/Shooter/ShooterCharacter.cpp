@@ -1173,13 +1173,16 @@ void AShooterCharacter::FinishDeath()
 	}
 }
 
+
 void AShooterCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	// BuffComponent 변수 초기화
 	if (Buff)
 	{
 		Buff->Character = this;
+		Buff->SetInitialSpeed(GetCharacterMovement()->MaxWalkSpeed, GetCharacterMovement()->MaxWalkSpeedCrouched);
 	}
 }
 
