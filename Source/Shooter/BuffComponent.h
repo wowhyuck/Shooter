@@ -17,7 +17,6 @@ public:
 	void TakeGold(int32 GoldAmount);
 	void BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float BuffTime);
 	void SetInitialSpeed(float BaseSpeed, float CrouchSpeed);
-	void ShieldBuff();
 
 protected:
 	virtual void BeginPlay() override;

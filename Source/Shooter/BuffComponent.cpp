@@ -60,10 +60,6 @@ void UBuffComponent::ResetSpeed()
 	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = InitialCrouchSpeed;
 }
 
-void UBuffComponent::ShieldBuff()
-{
-}
-
 void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
